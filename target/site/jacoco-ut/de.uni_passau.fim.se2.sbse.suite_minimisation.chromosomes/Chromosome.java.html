@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Chromosome.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Test-Suite-Minimisation</a> &gt; <a href="index.source.html" class="el_package">de.uni_passau.fim.se2.sbse.suite_minimisation.chromosomes</a> &gt; <span class="el_source">Chromosome.java</span></div><h1>Chromosome.java</h1><pre class="source lang-java linenums">package de.uni_passau.fim.se2.sbse.suite_minimisation.chromosomes;
+
+import de.uni_passau.fim.se2.sbse.suite_minimisation.crossover.Crossover;
+import de.uni_passau.fim.se2.sbse.suite_minimisation.mutation.Mutation;
+import de.uni_passau.fim.se2.sbse.suite_minimisation.utils.Pair;
+import de.uni_passau.fim.se2.sbse.suite_minimisation.utils.SelfTyped;
+
+import java.util.Objects;
+
+/**
+ * Chromosomes define a gene representation (genotype) for valid solutions to a given optimization
+ * problem and can be mutated &amp; crossed over to produce offspring.
+ *
+ * @param &lt;C&gt; the type of chromosomes produced as offspring by mutation and crossover
+ * @author Sebastian Schweikl
+ * @apiNote Usually, it is desired that chromosomes of type {@code C} produce offspring of the same
+ * type {@code C}. This requirement can be enforced at compile time by specifying a recursive type
+ * parameter, here: {@code C extends Chromosome&lt;C&gt;}.
+ */
+public abstract class Chromosome&lt;C extends Chromosome&lt;C&gt;&gt; implements SelfTyped&lt;C&gt; {
+
+    /**
+     * The mutation operator telling how to mutate a chromosome of the current type.
+     */
+    private final Mutation&lt;C&gt; mutation;
+
+    /**
+     * The crossover operator defining how to pair two chromosomes of the current type.
+     */
+    private final Crossover&lt;C&gt; crossover;
+
+    /**
+     * Constructs a new chromosome, using the given mutation and crossover operators for offspring
+     * creation.
+     *
+     * @param mutation  a strategy that tells how to perform mutation, not {@code null}
+     * @param crossover a strategy that tells how to perform crossover, not {@code null}
+     * @throws NullPointerException if an argument is {@code null}
+     */
+    protected Chromosome(final Mutation&lt;C&gt; mutation, final Crossover&lt;C&gt; crossover)
+<span class="fc" id="L41">            throws NullPointerException {</span>
+<span class="fc" id="L42">        this.mutation = Objects.requireNonNull(mutation);</span>
+<span class="fc" id="L43">        this.crossover = Objects.requireNonNull(crossover);</span>
+<span class="fc" id="L44">    }</span>
+
+    /**
+     * Constructs a new chromosome, using the {@link Mutation#identity() identity mutation} and
+     * {@link Crossover#identity() identity crossover} operators for offspring creation.
+     *
+     * @apiNote This constructor primarily intended for use during unit testing, e.g., when aspects
+     * of an algorithm are tested that do not rely on a particular mutation or crossover operator.
+     */
+    protected Chromosome() {
+<span class="fc" id="L54">        this(Mutation.identity(), Crossover.identity());</span>
+<span class="fc" id="L55">    }</span>
+
+    /**
+     * Creates a copy of this chromosome that uses the same mutation and crossover operators as the
+     * given {@code other} chromosome.
+     *
+     * @param other the chromosome to copy
+     * @throws NullPointerException if the given chromosome is {@code null}
+     * @apiNote Can be called by copy constructors of implementing subclasses.
+     */
+<span class="fc" id="L65">    protected Chromosome(final C other) throws NullPointerException {</span>
+<span class="fc" id="L66">        Objects.requireNonNull(other);</span>
+<span class="fc" id="L67">        this.mutation = other.getMutation();</span>
+<span class="fc" id="L68">        this.crossover = other.getCrossover();</span>
+<span class="fc" id="L69">    }</span>
+
+    /**
+     * Returns the mutation operator used by this chromosome.
+     *
+     * @return the mutation operator
+     */
+    public Mutation&lt;C&gt; getMutation() {
+<span class="fc" id="L77">        return mutation;</span>
+    }
+
+    /**
+     * Returns the crossover operator used by this chromosome.
+     *
+     * @return the crossover operator
+     */
+    public Crossover&lt;C&gt; getCrossover() {
+<span class="fc" id="L86">        return crossover;</span>
+    }
+
+    /**
+     * Applies the mutation operator to this chromosome and returns the resulting offspring.
+     *
+     * @return the mutated chromosome
+     * @apiNote Intended as syntactic sugar for {@link Mutation#apply}.
+     */
+    public C mutate() {
+<span class="fc" id="L96">        return mutation.apply(self());</span>
+    }
+
+    /**
+     * Applies the crossover operator to this chromosome and the given other given chromosome and
+     * returns the resulting offspring.
+     *
+     * @param other the chromosome with which to pair, not {@code null}
+     * @return the offspring
+     * @throws NullPointerException if {@code other} is {@code null}
+     * @apiNote Intended as syntactic sugar for {@link Crossover#apply}.
+     */
+    public Pair&lt;C&gt; crossover(final C other) {
+<span class="fc" id="L109">        Objects.requireNonNull(other);</span>
+<span class="fc" id="L110">        return crossover.apply(self(), other);</span>
+    }
+
+    /**
+     * Creates a copy of this chromosome. Implementors should clearly indicate whether a shallow or
+     * deep copy is made.
+     *
+     * @return a copy of this chromosome
+     */
+    public abstract C copy();
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public abstract boolean equals(final Object other); // enforce custom implementation
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public abstract int hashCode(); // enforce custom implementation
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

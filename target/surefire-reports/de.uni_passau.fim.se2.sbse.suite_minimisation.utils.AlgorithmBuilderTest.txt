@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: de.uni_passau.fim.se2.sbse.suite_minimisation.utils.AlgorithmBuilderTest
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in de.uni_passau.fim.se2.sbse.suite_minimisation.utils.AlgorithmBuilderTest

@@ -1,0 +1,107 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > BytesRef</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">de.uni_passau.fim.se2.sbse.suite_minimisation.examples.dependencies</a>
+</div>
+
+<h1>Coverage Summary for Class: BytesRef (de.uni_passau.fim.se2.sbse.suite_minimisation.examples.dependencies)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">BytesRef</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package de.uni_passau.fim.se2.sbse.suite_minimisation.examples.dependencies;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents byte[], as a slice (offset + length) into an existing byte[].
+&nbsp; *
+&nbsp; * &lt;p&gt;{@code BytesRef} implements {@link Comparable}. The underlying byte arrays
+&nbsp; * are sorted lexicographically, numerically treating elements as unsigned. This is identical to
+&nbsp; * Unicode codepoint order.
+&nbsp; */
+&nbsp;public interface BytesRef extends Comparable&lt;BytesRef&gt;, Cloneable {
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Returns a shallow clone of this instance (the underlying bytes are
+&nbsp;   * &lt;b&gt;not&lt;/b&gt; copied and will be shared by both the returned object and this
+&nbsp;   * object.
+&nbsp;   */
+&nbsp;  BytesRef clone();
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Calculates the hash code as required by TermsHash during indexing
+&nbsp;   */
+&nbsp;  @Override
+&nbsp;  int hashCode();
+&nbsp;
+&nbsp;  @Override
+&nbsp;  boolean equals(Object other);
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Returns hex encoded bytes, eg [0x6c 0x75 0x63 0x65 0x6e 0x65]
+&nbsp;   */
+&nbsp;  @Override
+&nbsp;  String toString();
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Unsigned byte order comparison
+&nbsp;   */
+&nbsp;  @Override
+&nbsp;  int compareTo(BytesRef other);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-12-13 22:10</div>
+</div>
+</body>
+</html>

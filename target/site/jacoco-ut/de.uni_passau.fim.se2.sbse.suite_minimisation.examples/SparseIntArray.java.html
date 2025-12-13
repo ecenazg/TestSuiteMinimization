@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SparseIntArray.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Test-Suite-Minimisation</a> &gt; <a href="index.source.html" class="el_package">de.uni_passau.fim.se2.sbse.suite_minimisation.examples</a> &gt; <span class="el_source">SparseIntArray.java</span></div><h1>SparseIntArray.java</h1><pre class="source lang-java linenums">package de.uni_passau.fim.se2.sbse.suite_minimisation.examples;
+
+/**
+ * SparseIntArrays map integers to integers.  Unlike a normal array of integers, there can be gaps
+ * in the indices.  It is intended to be more memory efficient than using a HashMap to map Integers
+ * to Integers, both because it avoids auto-boxing keys and values and its data structure doesn't
+ * rely on an extra entry object for each mapping.
+ *
+ * &lt;p&gt;Note that this container keeps its mappings in an array data structure,
+ * using a binary search to find keys.  The implementation is not intended to be appropriate for
+ * data structures that may contain large numbers of items.  It is generally slower than a
+ * traditional HashMap, since lookups require a binary search and adds and removes require inserting
+ * and deleting entries in the array.  For containers holding up to hundreds of items, the
+ * performance difference is not significant, less than 50%.&lt;/p&gt;
+ *
+ * &lt;p&gt;It is possible to iterate over the items in this container using
+ * {@link #keyAt(int)} and {@link #valueAt(int)}. Iterating over the keys using
+ * &lt;code&gt;keyAt(int)&lt;/code&gt; with ascending values of the index will return the
+ * keys in ascending order, or the values corresponding to the keys in ascending order in the case
+ * of &lt;code&gt;valueAt(int)&lt;/code&gt;.&lt;/p&gt;
+ */
+public class SparseIntArray implements Cloneable {
+
+<span class="nc" id="L24">    private static final int[] EMPTY_INT_ARRAY = new int[0];</span>
+    private int[] mKeys;
+    private int[] mValues;
+    private int mSize;
+
+    /**
+     * Creates a new SparseIntArray containing no mappings.
+     */
+    public SparseIntArray() {
+<span class="nc" id="L33">        this(10);</span>
+<span class="nc" id="L34">    }</span>
+
+    /**
+     * Creates a new SparseIntArray containing no mappings that will not require any additional
+     * memory allocation to store the specified number of mappings.  If you supply an initial
+     * capacity of 0, the sparse array will be initialized with a light-weight representation not
+     * requiring any additional array allocations.
+     */
+<span class="nc" id="L42">    public SparseIntArray(int initialCapacity) {</span>
+<span class="nc bnc" id="L43" title="All 2 branches missed.">        if (initialCapacity == 0) {</span>
+<span class="nc" id="L44">            mKeys = SparseIntArray.EMPTY_INT_ARRAY;</span>
+<span class="nc" id="L45">            mValues = SparseIntArray.EMPTY_INT_ARRAY;</span>
+        } else {
+<span class="nc" id="L47">            mKeys = new int[initialCapacity];</span>
+<span class="nc" id="L48">            mValues = new int[mKeys.length];</span>
+        }
+<span class="nc" id="L50">        mSize = 0;</span>
+<span class="nc" id="L51">    }</span>
+
+    /**
+     * Given the current size of an array, returns an ideal size to which the array should grow.
+     * This is typically double the given size, but should not be relied upon to do so in the
+     * future.
+     */
+    public static int growSize(int currentSize) {
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        return currentSize &lt;= 4 ? 8 : currentSize + (currentSize &gt;&gt; 1);</span>
+    }
+
+    @Override
+    public SparseIntArray clone() {
+<span class="nc" id="L64">        SparseIntArray clone = null;</span>
+        try {
+<span class="nc" id="L66">            clone = (SparseIntArray) super.clone();</span>
+<span class="nc" id="L67">            clone.mKeys = mKeys.clone();</span>
+<span class="nc" id="L68">            clone.mValues = mValues.clone();</span>
+<span class="nc" id="L69">        } catch (CloneNotSupportedException cnse) {</span>
+            /* ignore */
+<span class="nc" id="L71">        }</span>
+<span class="nc" id="L72">        return clone;</span>
+    }
+
+    /**
+     * Gets the int mapped from the specified key, or &lt;code&gt;0&lt;/code&gt; if no such mapping has been
+     * made.
+     */
+    public int get(int key) {
+<span class="nc" id="L80">        return get(key, 0);</span>
+    }
+
+    /**
+     * Gets the int mapped from the specified key, or the specified value if no such mapping has
+     * been made.
+     */
+    public int get(int key, int valueIfKeyNotFound) {
+<span class="nc" id="L88">        int i = binarySearch(mKeys, mSize, key);</span>
+
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        if (i &lt; 0) {</span>
+<span class="nc" id="L91">            return valueIfKeyNotFound;</span>
+        } else {
+<span class="nc" id="L93">            return mValues[i];</span>
+        }
+    }
+
+    /**
+     * Removes the mapping from the specified key, if there was any.
+     */
+    public void delete(int key) {
+<span class="nc" id="L101">        int i = binarySearch(mKeys, mSize, key);</span>
+
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        if (i &gt;= 0) {</span>
+<span class="nc" id="L104">            removeAt(i);</span>
+        }
+<span class="nc" id="L106">    }</span>
+
+    /**
+     * Removes the mapping at the given index.
+     */
+    public void removeAt(int index) {
+<span class="nc" id="L112">        System.arraycopy(mKeys, index + 1, mKeys, index, mSize - (index + 1));</span>
+<span class="nc" id="L113">        System.arraycopy(mValues, index + 1, mValues, index, mSize - (index + 1));</span>
+<span class="nc" id="L114">        --mSize;</span>
+<span class="nc" id="L115">    }</span>
+
+    /**
+     * Adds a mapping from the specified key to the specified value, replacing the previous mapping
+     * from the specified key if there was one.
+     */
+    public void put(int key, int value) {
+<span class="nc" id="L122">        int i = binarySearch(mKeys, mSize, key);</span>
+
+<span class="nc bnc" id="L124" title="All 2 branches missed.">        if (i &gt;= 0) {</span>
+<span class="nc" id="L125">            mValues[i] = value;</span>
+        } else {
+<span class="nc" id="L127">            i = ~i;</span>
+<span class="nc" id="L128">            mKeys = insertElementIntoIntArray(mKeys, mSize, i, key);</span>
+<span class="nc" id="L129">            mValues = insertElementIntoIntArray(mValues, mSize, i, value);</span>
+<span class="nc" id="L130">            ++mSize;</span>
+        }
+<span class="nc" id="L132">    }</span>
+
+    /**
+     * Returns the number of key-value mappings that this SparseIntArray currently stores.
+     */
+    public int size() {
+<span class="nc" id="L138">        return mSize;</span>
+    }
+
+    /**
+     * Given an index in the range &lt;code&gt;0...size()-1&lt;/code&gt;, returns the key from the
+     * &lt;code&gt;index&lt;/code&gt;th key-value mapping that this SparseIntArray stores.
+     *
+     * &lt;p&gt;The keys corresponding to indices in ascending order are guaranteed to
+     * be in ascending order, e.g., &lt;code&gt;keyAt(0)&lt;/code&gt; will return the smallest key and
+     * &lt;code&gt;keyAt(size()-1)&lt;/code&gt; will return the largest key.&lt;/p&gt;
+     */
+    public int keyAt(int index) {
+<span class="nc" id="L150">        return mKeys[index];</span>
+    }
+
+    /**
+     * Given an index in the range &lt;code&gt;0...size()-1&lt;/code&gt;, returns the value from the
+     * &lt;code&gt;index&lt;/code&gt;th key-value mapping that this SparseIntArray stores.
+     *
+     * &lt;p&gt;The values corresponding to indices in ascending order are guaranteed
+     * to be associated with keys in ascending order, e.g.,
+     * &lt;code&gt;valueAt(0)&lt;/code&gt; will return the value associated with the
+     * smallest key and &lt;code&gt;valueAt(size()-1)&lt;/code&gt; will return the value associated with the
+     * largest key.&lt;/p&gt;
+     */
+    public int valueAt(int index) {
+<span class="nc" id="L164">        return mValues[index];</span>
+    }
+
+    /**
+     * Returns the index for which {@link #keyAt} would return the specified key, or a negative
+     * number if the specified key is not mapped.
+     */
+    public int indexOfKey(int key) {
+<span class="nc" id="L172">        return binarySearch(mKeys, mSize, key);</span>
+    }
+
+    /**
+     * Returns an index for which {@link #valueAt} would return the specified key, or a negative
+     * number if no keys map to the specified value. Beware that this is a linear search, unlike
+     * lookups by key, and that multiple keys can map to the same value and this will find only one
+     * of them.
+     */
+    public int indexOfValue(int value) {
+<span class="nc bnc" id="L182" title="All 2 branches missed.">        for (int i = 0; i &lt; mSize; ++i) {</span>
+<span class="nc bnc" id="L183" title="All 2 branches missed.">            if (mValues[i] == value) {</span>
+<span class="nc" id="L184">                return i;</span>
+            }
+        }
+<span class="nc" id="L187">        return -1;</span>
+    }
+
+    /**
+     * Removes all key-value mappings from this SparseIntArray.
+     */
+    public void clear() {
+<span class="nc" id="L194">        mSize = 0;</span>
+<span class="nc" id="L195">    }</span>
+
+    /**
+     * Puts a key/value pair into the array, optimizing for the case where the key is greater than
+     * all existing keys in the array.
+     */
+    public void append(int key, int value) {
+<span class="nc bnc" id="L202" title="All 4 branches missed.">        if (mSize != 0 &amp;&amp; key &lt;= mKeys[mSize - 1]) {</span>
+<span class="nc" id="L203">            put(key, value);</span>
+<span class="nc" id="L204">            return;</span>
+        }
+
+<span class="nc" id="L207">        mKeys = appendElementIntoIntArray(mKeys, mSize, key);</span>
+<span class="nc" id="L208">        mValues = appendElementIntoIntArray(mValues, mSize, value);</span>
+<span class="nc" id="L209">        mSize++;</span>
+<span class="nc" id="L210">    }</span>
+
+    private int binarySearch(int[] array, int size, int value) {
+<span class="nc" id="L213">        int lo = 0;</span>
+<span class="nc" id="L214">        int hi = size - 1;</span>
+
+<span class="nc bnc" id="L216" title="All 2 branches missed.">        while (lo &lt;= hi) {</span>
+<span class="nc" id="L217">            int mid = (lo + hi) &gt;&gt;&gt; 1;</span>
+<span class="nc" id="L218">            int midVal = array[mid];</span>
+
+<span class="nc bnc" id="L220" title="All 2 branches missed.">            if (midVal &lt; value) {</span>
+<span class="nc" id="L221">                lo = mid + 1;</span>
+<span class="nc bnc" id="L222" title="All 2 branches missed.">            } else if (midVal &gt; value) {</span>
+<span class="nc" id="L223">                hi = mid - 1;</span>
+            } else {
+<span class="nc" id="L225">                return mid;  // value found</span>
+            }
+<span class="nc" id="L227">        }</span>
+<span class="nc" id="L228">        return ~lo;  // value not present</span>
+    }
+
+    private int[] appendElementIntoIntArray(int[] array, int currentSize, int element) {
+<span class="nc bnc" id="L232" title="All 2 branches missed.">        if (currentSize &gt; array.length) {</span>
+<span class="nc" id="L233">            throw new IllegalArgumentException(</span>
+                    &quot;Bad currentSize, originalSize: &quot; + array.length + &quot; currentSize: &quot;
+                            + currentSize);
+        }
+<span class="nc bnc" id="L237" title="All 2 branches missed.">        if (currentSize + 1 &gt; array.length) {</span>
+<span class="nc" id="L238">            int[] newArray = new int[SparseIntArray.growSize(currentSize)];</span>
+<span class="nc" id="L239">            System.arraycopy(array, 0, newArray, 0, currentSize);</span>
+<span class="nc" id="L240">            array = newArray;</span>
+        }
+<span class="nc" id="L242">        array[currentSize] = element;</span>
+<span class="nc" id="L243">        return array;</span>
+    }
+
+    private int[] insertElementIntoIntArray(int[] array, int currentSize, int index, int element) {
+<span class="nc bnc" id="L247" title="All 2 branches missed.">        if (currentSize &gt; array.length) {</span>
+<span class="nc" id="L248">            throw new IllegalArgumentException(</span>
+                    &quot;Bad currentSize, originalSize: &quot; + array.length + &quot; currentSize: &quot;
+                            + currentSize);
+        }
+
+<span class="nc bnc" id="L253" title="All 2 branches missed.">        if (currentSize + 1 &lt;= array.length) {</span>
+<span class="nc" id="L254">            System.arraycopy(array, index, array, index + 1, currentSize - index);</span>
+<span class="nc" id="L255">            array[index] = element;</span>
+<span class="nc" id="L256">            return array;</span>
+        }
+
+<span class="nc" id="L259">        int[] newArray = new int[SparseIntArray.growSize(currentSize)];</span>
+<span class="nc" id="L260">        System.arraycopy(array, 0, newArray, 0, index);</span>
+<span class="nc" id="L261">        newArray[index] = element;</span>
+<span class="nc" id="L262">        System.arraycopy(array, index, newArray, index + 1, array.length - index);</span>
+<span class="nc" id="L263">        return newArray;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * &lt;p&gt;This implementation composes a string by iterating over its mappings.
+     */
+    @Override
+    public String toString() {
+<span class="nc bnc" id="L273" title="All 2 branches missed.">        if (size() &lt;= 0) {</span>
+<span class="nc" id="L274">            return &quot;{}&quot;;</span>
+        }
+
+<span class="nc" id="L277">        StringBuilder buffer = new StringBuilder(mSize * 28);</span>
+<span class="nc" id="L278">        buffer.append('{');</span>
+<span class="nc bnc" id="L279" title="All 2 branches missed.">        for (int i = 0; i &lt; mSize; i++) {</span>
+<span class="nc bnc" id="L280" title="All 2 branches missed.">            if (i &gt; 0) {</span>
+<span class="nc" id="L281">                buffer.append(&quot;, &quot;);</span>
+            }
+<span class="nc" id="L283">            int key = keyAt(i);</span>
+<span class="nc" id="L284">            buffer.append(key);</span>
+<span class="nc" id="L285">            buffer.append('=');</span>
+<span class="nc" id="L286">            int value = valueAt(i);</span>
+<span class="nc" id="L287">            buffer.append(value);</span>
+        }
+<span class="nc" id="L289">        buffer.append('}');</span>
+<span class="nc" id="L290">        return buffer.toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

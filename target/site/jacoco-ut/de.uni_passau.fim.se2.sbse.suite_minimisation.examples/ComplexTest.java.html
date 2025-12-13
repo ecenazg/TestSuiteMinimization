@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ComplexTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Test-Suite-Minimisation</a> &gt; <a href="index.source.html" class="el_package">de.uni_passau.fim.se2.sbse.suite_minimisation.examples</a> &gt; <span class="el_source">ComplexTest.java</span></div><h1>ComplexTest.java</h1><pre class="source lang-java linenums">package de.uni_passau.fim.se2.sbse.suite_minimisation.examples;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+<span class="nc" id="L8">public class ComplexTest {</span>
+
+    @Test
+    public void test0() throws Throwable {
+<span class="nc" id="L12">        double value = 2.5;</span>
+<span class="nc" id="L13">        Complex com = new Complex(value, value);</span>
+<span class="nc" id="L14">        assertEquals(com.real, value);</span>
+<span class="nc" id="L15">        assertEquals(com.imag, value);</span>
+<span class="nc" id="L16">    }</span>
+
+    @Test
+    public void test1() throws Throwable {
+<span class="nc" id="L20">        double value = 2.5;</span>
+<span class="nc" id="L21">        Complex com = new Complex(value, value);</span>
+<span class="nc" id="L22">        assertEquals(com.real, value, 0);</span>
+<span class="nc" id="L23">        assertEquals(com.imag, value, 0);</span>
+<span class="nc" id="L24">    }</span>
+
+    @Test
+    public void test2() throws Throwable {
+<span class="nc" id="L28">        double value = Double.MAX_VALUE;</span>
+<span class="nc" id="L29">        Complex com = new Complex(value, value);</span>
+<span class="nc" id="L30">        assertEquals(com.real, Double.MAX_VALUE);</span>
+<span class="nc" id="L31">        assertEquals(com.imag, Double.MAX_VALUE);</span>
+<span class="nc" id="L32">    }</span>
+
+    @Test
+    public void test3() throws Throwable {
+<span class="nc" id="L36">        double value = 2.5;</span>
+<span class="nc" id="L37">        Complex com1 = new Complex(value, value);</span>
+
+<span class="nc" id="L39">        Complex com2 = new Complex(value, value);</span>
+<span class="nc" id="L40">        Complex wow = com1.add(com2);</span>
+<span class="nc" id="L41">        assertEquals(wow.real, 2 * value);</span>
+<span class="nc" id="L42">        assertEquals(wow.imag, 2 * value);</span>
+
+<span class="nc" id="L44">    }</span>
+
+    @Test
+    public void test4() throws Throwable {
+<span class="nc" id="L48">        Complex c = new Complex(1.0, 2.0);</span>
+<span class="nc bnc" id="L49" title="All 4 branches missed.">        assertTrue(c.real &gt; 0.9 &amp;&amp; c.real &lt; 1.1);</span>
+<span class="nc" id="L50">    }</span>
+
+    @Test
+    public void test5() throws Throwable {
+<span class="nc" id="L54">        Complex c = new Complex(1.0, 2.0);</span>
+<span class="nc" id="L55">        assertEquals(c.real, 1.0, 0);</span>
+<span class="nc" id="L56">    }</span>
+
+    @Test
+    public void test6() throws Throwable {
+<span class="nc" id="L60">        Complex c = new Complex(0, 4.77);</span>
+<span class="nc" id="L61">        assertTrue(c.isPure());</span>
+<span class="nc" id="L62">    }</span>
+
+    @Test
+    public void test7() throws Throwable {
+<span class="nc" id="L66">        Complex c = new Complex(2.0, 3.0);</span>
+<span class="nc" id="L67">        assertEquals(2.0, c.real);</span>
+<span class="nc" id="L68">        assertEquals(3.0, c.imag);</span>
+<span class="nc" id="L69">    }</span>
+
+    @Test
+    public void test8() throws Throwable {
+<span class="nc" id="L73">        Complex num = new Complex(2.0, 1.0);</span>
+<span class="nc" id="L74">        Complex numPower = new Complex(1.0, 1.0);</span>
+<span class="nc" id="L75">        assertEquals(1.29, num.pow(numPower).real, 0.01);</span>
+<span class="nc" id="L76">        assertEquals(1.85, num.pow(numPower).imag, 0.01);</span>
+<span class="nc" id="L77">    }</span>
+
+    @Test
+    public void test9() throws Throwable {
+<span class="nc" id="L81">        Complex firstAddend = new Complex(2.0, 1.0);</span>
+<span class="nc" id="L82">        Complex secondAddend = new Complex(1.0, 3.0);</span>
+<span class="nc" id="L83">        Complex sum = firstAddend.add(secondAddend);</span>
+
+<span class="nc" id="L85">        assertEquals(3.0, sum.real, 0.01);</span>
+<span class="nc" id="L86">        assertEquals(4.0, sum.imag, 0.01);</span>
+<span class="nc" id="L87">    }</span>
+
+    @Test
+    public void test10() throws Throwable {
+<span class="nc" id="L91">        Complex firstFactor = new Complex(2.0, 1.0);</span>
+<span class="nc" id="L92">        Complex secondFactor = new Complex(1.0, 3.0);</span>
+<span class="nc" id="L93">        Complex product = firstFactor.multiply(secondFactor);</span>
+
+<span class="nc" id="L95">        assertEquals(-1.0, product.real, 0.01);</span>
+<span class="nc" id="L96">        assertEquals(7.0, product.imag, 0.01);</span>
+<span class="nc" id="L97">    }</span>
+
+    @Test
+    public void test11() throws Throwable {
+<span class="nc" id="L101">        Complex firstFactor = new Complex(2.0, 1.0);</span>
+<span class="nc" id="L102">        double secondFactor = 2.0;</span>
+<span class="nc" id="L103">        Complex product = firstFactor.multiply(secondFactor);</span>
+
+<span class="nc" id="L105">        assertEquals(4.0, product.real, 0.01);</span>
+<span class="nc" id="L106">        assertEquals(2.0, product.imag, 0.01);</span>
+<span class="nc" id="L107">    }</span>
+
+    @Test
+    public void test12() throws Throwable {
+<span class="nc" id="L111">        Complex complex = new Complex(3.0, 1.0);</span>
+
+<span class="nc" id="L113">        assertEquals(Math.sqrt(10.0), complex.mod(), 0.01);</span>
+<span class="nc" id="L114">        assertEquals(Math.sqrt(10.0), complex.norm(), 0.01);</span>
+<span class="nc" id="L115">    }</span>
+
+    @Test
+    public void test13() throws Throwable {
+<span class="nc" id="L119">        Complex minuend = new Complex(3.0, 2.0);</span>
+<span class="nc" id="L120">        Complex subtrahend = new Complex(2.0, 1.0);</span>
+<span class="nc" id="L121">        Complex difference = minuend.subtract(subtrahend);</span>
+
+<span class="nc" id="L123">        assertEquals(1.0, difference.real, 0.01);</span>
+<span class="nc" id="L124">        assertEquals(1.0, difference.imag, 0.01);</span>
+<span class="nc" id="L125">    }</span>
+
+    @Test
+    public void test14() throws Throwable {
+<span class="nc" id="L129">        Complex complex = new Complex(3.0, 2.0);</span>
+<span class="nc" id="L130">        Complex negatedComplex = complex.negate();</span>
+
+<span class="nc" id="L132">        assertEquals(-3.0, negatedComplex.real, 0.01);</span>
+<span class="nc" id="L133">        assertEquals(-2.0, negatedComplex.imag, 0.01);</span>
+<span class="nc" id="L134">    }</span>
+
+    @Test
+    public void test15() throws Throwable {
+<span class="nc" id="L138">        Complex dividend = new Complex(2.0, 1.0);</span>
+<span class="nc" id="L139">        Complex divisor = new Complex(1.0, 1.0);</span>
+<span class="nc" id="L140">        Complex quotient = dividend.divide(divisor);</span>
+
+<span class="nc" id="L142">        assertEquals(1.5, quotient.real, 0.01);</span>
+<span class="nc" id="L143">        assertEquals(-0.5, quotient.imag, 0.01);</span>
+<span class="nc" id="L144">    }</span>
+
+    @Test
+    public void test16() throws Throwable {
+<span class="nc" id="L148">        Complex dividend = new Complex(4.0, 2.0);</span>
+<span class="nc" id="L149">        double divisor = 2;</span>
+<span class="nc" id="L150">        Complex quotient = dividend.divide(divisor);</span>
+
+<span class="nc" id="L152">        assertEquals(2.0, quotient.real, 0.01);</span>
+<span class="nc" id="L153">        assertEquals(1.0, quotient.imag, 0.01);</span>
+<span class="nc" id="L154">    }</span>
+
+    @Test
+    public void test17() throws Throwable {
+<span class="nc" id="L158">        Complex complex = new Complex(2.0, 2.0);</span>
+
+<span class="nc" id="L160">        assertEquals(0.25, complex.inverse().real, 0.01);</span>
+<span class="nc" id="L161">        assertEquals(-0.25, complex.inverse().imag, 0.01);</span>
+<span class="nc" id="L162">    }</span>
+
+    @Test
+    public void test18() throws Throwable {
+<span class="nc" id="L166">        Complex complex = new Complex(3.0, 1.0);</span>
+
+<span class="nc" id="L168">        assertEquals(1.15, complex.log().real, 0.01);</span>
+<span class="nc" id="L169">        assertEquals(0.32, complex.log().imag, 0.01);</span>
+<span class="nc" id="L170">    }</span>
+
+    @Test
+    public void test19() throws Throwable {
+<span class="nc" id="L174">        Complex complex = new Complex(3.0, 1.0);</span>
+
+<span class="nc" id="L176">        assertEquals(complex.angle(), complex.phase(), 0.01);</span>
+<span class="nc" id="L177">        assertEquals(complex.angle(), complex.phase(), 0.01);</span>
+<span class="nc" id="L178">    }</span>
+
+    @Test
+    public void test20() throws Throwable {
+<span class="nc" id="L182">        Complex complex = new Complex(3.0, 1.0);</span>
+<span class="nc" id="L183">        Complex complexNegative = new Complex(3.0, -1.0);</span>
+
+<span class="nc" id="L185">        assertEquals(&quot;3.0 + 1.0 i&quot;, complex.toString());</span>
+<span class="nc" id="L186">        assertEquals(&quot;3.0 - 1.0 i&quot;, complexNegative.toString());</span>
+<span class="nc" id="L187">    }</span>
+
+    @Test
+    public void test21() throws Throwable {
+<span class="nc" id="L191">        Complex num = new Complex(2.0, 1.0);</span>
+<span class="nc" id="L192">        assertEquals(3.0, num.pow(2.0).real, 0.0001);</span>
+<span class="nc" id="L193">        assertEquals(4.0, num.pow(2.0).imag, 0.0001);</span>
+<span class="nc" id="L194">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,269 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > FitnessFunction</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">de.uni_passau.fim.se2.sbse.suite_minimisation.fitness_functions</a>
+</div>
+
+<h1>Coverage Summary for Class: FitnessFunction (de.uni_passau.fim.se2.sbse.suite_minimisation.fitness_functions)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FitnessFunction</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/11)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package de.uni_passau.fim.se2.sbse.suite_minimisation.fitness_functions;
+&nbsp;
+&nbsp;import java.util.Comparator;
+&nbsp;import java.util.Objects;
+&nbsp;import java.util.function.BinaryOperator;
+&nbsp;import java.util.function.DoubleUnaryOperator;
+&nbsp;import java.util.function.Function;
+&nbsp;import java.util.function.ToDoubleFunction;
+&nbsp;
+&nbsp;/**
+&nbsp; * A fitness function maps a given solution to a numeric value that tells the goodness of the
+&nbsp; * solution. Minimizing fitness functions characterize better solutions by assigning lower values to
+&nbsp; * them, whereas maximizing fitness functions assign higher values.
+&nbsp; *
+&nbsp; * @param &lt;C&gt; the type of solution rated by this fitness function
+&nbsp; * @author Sebastian Schweikl
+&nbsp; */
+&nbsp;public interface FitnessFunction&lt;C&gt; extends ToDoubleFunction&lt;C&gt; {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * &lt;p&gt;
+&nbsp;     * Computes and returns the fitness value of the given solution {@code c}. Minimizing fitness
+&nbsp;     * functions must return lower values for better solutions, whereas maximizing fitness functions
+&nbsp;     * are expected to return higher values. Implementations must ensure that the returned value is
+&nbsp;     * always non-negative and never {@code NaN}.
+&nbsp;     * &lt;/p&gt;
+&nbsp;     * &lt;p&gt;
+&nbsp;     * When two solutions {@code c1} and {@code c2} are equal it is generally recommended to return
+&nbsp;     * the same fitness value for both of them. That is, {@code c1.equals(c2)} implies {@code
+&nbsp;     * getFitness(c1) == getFitness(c2)}. While this is not an absolute requirement implementations
+&nbsp;     * that do not conform to this should clearly indicate this fact.
+&nbsp;     * &lt;/p&gt;
+&nbsp;     *
+&nbsp;     * @param c the solution to rate
+&nbsp;     * @return the fitness value of the given solutions
+&nbsp;     * @throws NullPointerException if {@code null} is given
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    double applyAsDouble(final C c) throws NullPointerException;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns a composed fitness function that first applies this function to its input, and then
+&nbsp;     * applies the {@code after} function to the result. If evaluation of either function throws an
+&nbsp;     * exception, it is relayed to the caller of the composed function.
+&nbsp;     *
+&nbsp;     * @param after the function to apply after this function is applied
+&nbsp;     * @return a composed function that first applies this function and then applies the {@code
+&nbsp;     * after} function
+&nbsp;     * @throws NullPointerException if after is null
+&nbsp;     */
+&nbsp;    default FitnessFunction&lt;C&gt; andThenAsDouble(final DoubleUnaryOperator after) {
+<b class="nc">&nbsp;        Objects.requireNonNull(after);</b>
+<b class="nc">&nbsp;        return isMinimizing()</b>
+<b class="nc">&nbsp;                ? (MinimizingFitnessFunction&lt;C&gt;) c -&gt; after.applyAsDouble(this.applyAsDouble(c))</b>
+<b class="nc">&nbsp;                : (MaximizingFitnessFunction&lt;C&gt;) c -&gt; after.applyAsDouble(this.applyAsDouble(c));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Tells whether this function is a minimizing fitness function. The opposite of {@link
+&nbsp;     * #isMaximizing()}.
+&nbsp;     *
+&nbsp;     * @return {@code true} if this is a minimizing fitness function, {@code false} if this is a
+&nbsp;     * maximizing fitness function
+&nbsp;     */
+&nbsp;    boolean isMinimizing();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Tells whether this function is a maximizing fitness function. The opposite of {@link
+&nbsp;     * #isMinimizing()}.
+&nbsp;     *
+&nbsp;     * @return {@code true} if this is a maximizing fitness function, {@code false} if this is a
+&nbsp;     * minimizing fitness function
+&nbsp;     */
+&nbsp;    default boolean isMaximizing() {
+<b class="nc">&nbsp;        return !isMinimizing();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns a comparator that compares two solutions by their fitness, taking into account
+&nbsp;     * whether this is a maximizing or a minimizing fitness function. In other words, given two
+&nbsp;     * solutions {@code c1} and {@code c2} with fitness values {@code f1} and {@code f2},
+&nbsp;     * respectively, the comparator will return a positive integer if {@code f1} is better than
+&nbsp;     * {@code f2}, zero ({@code 0}) if the two fitness values are equal, and a negative integer if
+&nbsp;     * {@code f1} is worse than {@code f2}. If this is a minimizing fitness function, smaller
+&nbsp;     * fitness values are considered better, and, on the contrary, if this is a maximizing fitness
+&nbsp;     * function, larger fitness values are considered better.
+&nbsp;     * &lt;p&gt;
+&nbsp;     * Example usage:
+&nbsp;     * &lt;pre&gt;{@code
+&nbsp;     * FitnessFunction&lt;C&gt; ff = ...;
+&nbsp;     * C c1 = ...; // first solution to compare
+&nbsp;     * C c2 = ...; // second solution to compare
+&nbsp;     *
+&nbsp;     * int flag = ff.comparator().compare(c1, c2);
+&nbsp;     * if (flag &gt; 0) {
+&nbsp;     *     // c1 is better than c2
+&nbsp;     * } else if (flag &lt; 0) {
+&nbsp;     *     // c2 is better than c1
+&nbsp;     * } else {
+&nbsp;     *     // c1 and c2 are equally good
+&nbsp;     * }
+&nbsp;     * }&lt;/pre&gt;
+&nbsp;     *
+&nbsp;     * @return a comparator that uses this fitness function as extractor for its sort key
+&nbsp;     * @implNote The default implementation creates a comparator via {@code
+&nbsp;     * Comparator.comparingDouble(this)}. When no caching is implemented in subclasses, this entails
+&nbsp;     * &lt;em&gt;two&lt;/em&gt; fitness evaluations.
+&nbsp;     */
+&nbsp;    default Comparator&lt;C&gt; comparator() {
+<b class="nc">&nbsp;        final Comparator&lt;C&gt; comparator = Comparator.comparingDouble(this);</b>
+<b class="nc">&nbsp;        return isMinimizing() ? comparator.reversed() : comparator;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns a binary operator that determines the better of two given solutions based on their
+&nbsp;     * fitness, taking into account whether this is a minimizing or maximizing fitness function.
+&nbsp;     * When both solutions are equally good, the binary operator returns the first argument.
+&nbsp;     * &lt;p&gt;
+&nbsp;     * Example usage:
+&nbsp;     * &lt;pre&gt;{@code
+&nbsp;     * FitnessFunction&lt;C&gt; ff = ...;
+&nbsp;     * C c1 = ...;
+&nbsp;     * C c2 = ...;
+&nbsp;     * C best = ff.best().apply(c1, c2);
+&nbsp;     * }
+&nbsp;     * &lt;/pre&gt;
+&nbsp;     *
+&nbsp;     * @return a binary operator to determine the better of two given solutions
+&nbsp;     * @implNote The default implementation uses this fitness function&#39;s {@code comparator()} to
+&nbsp;     * determine which solution is better. When no caching is implemented in subclasses, this
+&nbsp;     * entails &lt;em&gt;two&lt;/em&gt; fitness evaluations.
+&nbsp;     */
+&nbsp;    default BinaryOperator&lt;C&gt; best() {
+<b class="nc">&nbsp;        return isMinimizing()</b>
+<b class="nc">&nbsp;                ? BinaryOperator.minBy(comparator())</b>
+<b class="nc">&nbsp;                : BinaryOperator.maxBy(comparator());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Converts this fitness function into a {@code Function&lt;C, Double&gt;}, i.e., instead of returning
+&nbsp;     * a primitive {@code double} it will return a boxed {@code Double}. Note: the {@code Function}
+&nbsp;     * interface defines {@code apply} instead of {@code applyAsDouble}.
+&nbsp;     *
+&nbsp;     * @return variant of this fitness function returning a boxed {@code Double} instead of a
+&nbsp;     * primitive {@code double}
+&nbsp;     * @apiNote This is sometimes useful when working with APIs that only work with {@code Object}s
+&nbsp;     * but not primitive types, e.g., {@code Collectors.groupingBy} and others.
+&nbsp;     */
+&nbsp;    default Function&lt;C, Double&gt; boxed() {
+<b class="nc">&nbsp;        return this::applyAsDouble;</b>
+&nbsp;    }
+&nbsp;}
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-12-13 22:10</div>
+</div>
+</body>
+</html>

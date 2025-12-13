@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Utils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Test-Suite-Minimisation</a> &gt; <a href="index.source.html" class="el_package">de.uni_passau.fim.se2.sbse.suite_minimisation.utils</a> &gt; <span class="el_source">Utils.java</span></div><h1>Utils.java</h1><pre class="source lang-java linenums">package de.uni_passau.fim.se2.sbse.suite_minimisation.utils;
+
+import de.uni_passau.fim.se2.sbse.suite_minimisation.fitness_functions.FitnessFunction;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.*;
+
+<span class="nc" id="L10">public class Utils {</span>
+
+    /**
+     * Parses a coverage matrix from a string.
+     *
+     * @param matrixFile the string representation of the coverage matrix
+     * @return the parsed coverage matrix
+     * @throws IOException if the supplied file could not be read
+     */
+    public static boolean[][] parseCoverageMatrix(File matrixFile) throws IOException {
+<span class="fc" id="L20">        List&lt;String&gt; matrix = Files.readAllLines(matrixFile.toPath());</span>
+
+        // Remove outer brackets
+<span class="fc" id="L23">        matrix.removeFirst();</span>
+<span class="fc" id="L24">        matrix.removeLast();</span>
+
+        // Initialize 2D boolean array
+<span class="fc" id="L27">        boolean[][] parsedMatrix = new boolean[matrix.size()][];</span>
+
+<span class="fc bfc" id="L29" title="All 2 branches covered.">        for (int i = 0; i &lt; matrix.size(); i++) {</span>
+            // Remove any remaining brackets and split by comma
+<span class="fc" id="L31">            String[] values = matrix.get(i).replace(&quot;[&quot;, &quot;&quot;).replace(&quot;]&quot;, &quot;&quot;).split(&quot;, &quot;);</span>
+<span class="fc" id="L32">            parsedMatrix[i] = new boolean[values.length];</span>
+<span class="fc bfc" id="L33" title="All 2 branches covered.">            for (int j = 0; j &lt; values.length; j++) {</span>
+                // Parse &quot;true&quot; or &quot;false&quot; as boolean
+<span class="fc" id="L35">                parsedMatrix[i][j] = Boolean.parseBoolean(values[j]);</span>
+            }
+        }
+
+<span class="fc" id="L39">        return parsedMatrix;</span>
+    }
+
+    /**
+     * Computes the hyper-volume of the given Pareto {@code front}, using the given fitness
+     * functions {@code f1} and {@code f2}, and {@code r1} and {@code r2} as coordinates of the
+     * reference point. The fitness functions must produce normalized results between 0 and 1.
+     *
+     * @param front the front for which to compute the hyper-volume
+     * @param f1    the first fitness function
+     * @param f2    the second fitness function
+     * @param r1    reference coordinate for {@code f1}
+     * @param r2    reference coordinate for {@code f2}
+     * @return the hyper volume of the given front w.r.t. the reference point
+     * @apiNote The function uses ugly raw types because it seems the type system doesn't want to
+     * let me express this in any other way :(
+     * @implSpec In the implementation of this method you might need to cast or use raw types, too.
+     */
+    @SuppressWarnings({&quot;rawtypes&quot;, &quot;unchecked&quot;})
+    public static double computeHyperVolume(
+            final List front,
+            final FitnessFunction f1,
+            final FitnessFunction f2,
+            final double r1,
+            final double r2)
+            throws IllegalArgumentException {
+
+<span class="fc bfc" id="L66" title="All 4 branches covered.">        if (front == null || front.isEmpty()) {</span>
+<span class="fc" id="L67">            return 0.0;</span>
+        }
+
+        // Collect points (f1, f2)
+<span class="fc" id="L71">        final int n = front.size();</span>
+<span class="fc" id="L72">        double[][] points = new double[n][2];</span>
+
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        for (int i = 0; i &lt; n; i++) {</span>
+<span class="fc" id="L75">            Object c = front.get(i);</span>
+<span class="fc" id="L76">            points[i][0] = f1.applyAsDouble(c); // coverage</span>
+<span class="fc" id="L77">            points[i][1] = f2.applyAsDouble(c); // size</span>
+        }
+
+        // Sort by f1 (coverage) ascending
+<span class="fc" id="L81">        Arrays.sort(points, Comparator.comparingDouble(p -&gt; p[0]));</span>
+
+<span class="fc" id="L83">        double hyperVolume = 0.0;</span>
+<span class="fc" id="L84">        double prevF1 = r1;</span>
+
+        // Sweep left → right
+<span class="fc bfc" id="L87" title="All 2 branches covered.">        for (int i = 0; i &lt; n; i++) {</span>
+<span class="fc" id="L88">            double currF1 = points[i][0];</span>
+<span class="fc" id="L89">            double currF2 = points[i][1];</span>
+
+<span class="fc" id="L91">            double width = currF1 - prevF1;</span>
+<span class="fc" id="L92">            double height = r2 - currF2;</span>
+
+<span class="pc bpc" id="L94" title="2 of 4 branches missed.">            if (width &gt; 0 &amp;&amp; height &gt; 0) {</span>
+<span class="fc" id="L95">                hyperVolume += width * height;</span>
+            }
+
+<span class="fc" id="L98">            prevF1 = currF1;</span>
+        }
+
+<span class="fc" id="L101">        return hyperVolume;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Main.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Test-Suite-Minimisation</a> &gt; <a href="index.source.html" class="el_package">de.uni_passau.fim.se2.sbse.suite_minimisation</a> &gt; <span class="el_source">Main.java</span></div><h1>Main.java</h1><pre class="source lang-java linenums">package de.uni_passau.fim.se2.sbse.suite_minimisation;
+
+import de.uni_passau.fim.se2.sbse.suite_minimisation.algorithms.GeneticAlgorithm;
+import de.uni_passau.fim.se2.sbse.suite_minimisation.algorithms.SearchAlgorithmType;
+import de.uni_passau.fim.se2.sbse.suite_minimisation.chromosomes.Chromosome;
+import de.uni_passau.fim.se2.sbse.suite_minimisation.chromosomes.TestSuiteChromosome;
+import de.uni_passau.fim.se2.sbse.suite_minimisation.fitness_functions.FitnessFunction;
+import de.uni_passau.fim.se2.sbse.suite_minimisation.stopping_conditions.MaxFitnessEvaluations;
+import de.uni_passau.fim.se2.sbse.suite_minimisation.stopping_conditions.StoppingCondition;
+import de.uni_passau.fim.se2.sbse.suite_minimisation.utils.AlgorithmBuilder;
+import de.uni_passau.fim.se2.sbse.suite_minimisation.utils.CoverageTracker;
+import de.uni_passau.fim.se2.sbse.suite_minimisation.utils.Randomness;
+import de.uni_passau.fim.se2.sbse.suite_minimisation.utils.Utils;
+import picocli.CommandLine;
+
+import java.util.*;
+import java.util.concurrent.Callable;
+
+import static java.util.stream.Collectors.summarizingDouble;
+
+<span class="nc" id="L21">public class Main implements Callable&lt;Integer&gt; {</span>
+
+    @CommandLine.Option(
+            names = {&quot;-c&quot;, &quot;--class&quot;},
+            description = &quot;The name of the class under test.&quot;,
+            required = true)
+    private String className;
+
+    @CommandLine.Option(
+            names = {&quot;-p&quot;, &quot;--package&quot;},
+            description = &quot;The package containing the class under test.&quot;,
+            defaultValue = &quot;de.uni_passau.fim.se2.sbse.suite_minimisation.examples&quot;)
+    private String packageName;
+
+    @CommandLine.Option(
+            names = {&quot;-f&quot;, &quot;--max-evaluations&quot;},
+            description = &quot;The maximum number of fitness evaluations.&quot;,
+            defaultValue = &quot;1000&quot;)
+    private int maxEvaluations;
+
+    @CommandLine.Option(
+            names = {&quot;-r&quot;, &quot;--repetitions&quot;},
+            description = &quot;The number of search repetitions to perform.&quot;,
+            defaultValue = &quot;10&quot;)
+    private int repetitions;
+
+    @CommandLine.Option(
+            names = {&quot;-s&quot;, &quot;--seed&quot;},
+            description = &quot;Use a fixed RNG seed.&quot;)
+    public void setSeed(int seed) {
+<span class="nc" id="L51">        Randomness.random().setSeed(seed);</span>
+<span class="nc" id="L52">    }</span>
+
+    @CommandLine.Parameters(
+            paramLabel = &quot;algorithms&quot;,
+            description = &quot;The search algorithms to use.&quot;,
+            arity = &quot;1...&quot;,
+            converter = AlgorithmConverter.class)
+    private List&lt;SearchAlgorithmType&gt; algorithms;
+
+    /**
+     * The names of the test cases (corresponding to the coverage matrix). That is, for and index
+     * {@code i}, {@code testCases[i]} tells the name of the ith test case and
+     * {@code coverageMatrix[i]} tells which lines of code are covered by the ith test case.
+     */
+    private String[] testCases;
+
+    /**
+     * The coverage matrix for the analyzed software system.
+     */
+    private boolean[][] coverageMatrix;
+
+    /**
+     * Instance of the algorithm builder to create the search algorithms.
+     */
+    private AlgorithmBuilder algorithmBuilder;
+
+
+    public static void main(String[] args) {
+<span class="nc" id="L80">        int exitCode = new CommandLine(new Main()).execute(args);</span>
+<span class="nc" id="L81">        System.exit(exitCode);</span>
+<span class="nc" id="L82">    }</span>
+
+    /**
+     * Executes the specified search algorithms and prints a summary of the obtained results.
+     *
+     * @return The exit code of the application
+     */
+    public Integer call() {
+        try {
+<span class="nc" id="L91">            setCoverageMatrixAndTestCaseNames();</span>
+<span class="nc" id="L92">        } catch (Exception e) {</span>
+<span class="nc" id="L93">            System.err.println(&quot;Error while initializing coverage matrix and test case names.&quot;);</span>
+<span class="nc" id="L94">            return 1;</span>
+<span class="nc" id="L95">        }</span>
+<span class="nc" id="L96">        StoppingCondition stoppingCondition = MaxFitnessEvaluations.of(maxEvaluations);</span>
+<span class="nc" id="L97">        this.algorithmBuilder = new AlgorithmBuilder(Randomness.random(), stoppingCondition, coverageMatrix);</span>
+
+<span class="nc" id="L99">        List&lt;AlgorithmStats&gt; results = startSearch();</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">        for (final AlgorithmStats result : results) {</span>
+<span class="nc" id="L101">            System.out.println(result);</span>
+<span class="nc" id="L102">        }</span>
+<span class="nc" id="L103">        return 0;</span>
+    }
+
+    /**
+     * Starts the command line tool, running the specified algorithms and returns the results.
+     *
+     * @return the results
+     */
+    List&lt;AlgorithmStats&gt; startSearch() {
+<span class="nc" id="L112">        final var algorithmStats = new ArrayList&lt;AlgorithmStats&gt;();</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">        for (final var algorithm : algorithms) {</span>
+<span class="nc" id="L114">            final GeneticAlgorithm&lt;? extends Chromosome&lt;?&gt;&gt; search = algorithmBuilder.buildAlgorithm(algorithm);</span>
+
+<span class="nc" id="L116">            final long start = System.currentTimeMillis();</span>
+<span class="nc" id="L117">            final var stats = repeatSearch(search);</span>
+<span class="nc" id="L118">            final long totalTime = System.currentTimeMillis() - start;</span>
+<span class="nc" id="L119">            final double avgTime = (double) totalTime / repetitions;</span>
+
+<span class="nc" id="L121">            algorithmStats.add(new AlgorithmStats(algorithm, stats, totalTime, avgTime));</span>
+<span class="nc" id="L122">        }</span>
+<span class="nc" id="L123">        return algorithmStats;</span>
+    }
+
+    private List&lt;RepetitionStats&gt; repeatSearch(final GeneticAlgorithm&lt;? extends Chromosome&lt;?&gt;&gt; algorithm) {
+        // Normalized fitness functions that compute the coverage and size of a test suite.
+<span class="nc" id="L128">        final FitnessFunction&lt;? extends Chromosome&lt;?&gt;&gt; coverageFF = algorithmBuilder.getCoverageFF();</span>
+<span class="nc" id="L129">        final FitnessFunction&lt;? extends Chromosome&lt;?&gt;&gt; sizeFF = algorithmBuilder.getSizeFF();</span>
+
+        // Coordinates for the reference point when computing the hyper-volume of a Pareto front.
+<span class="nc" id="L132">        final double covRef = 0.0;  // worst possible coverage (0%)</span>
+<span class="nc" id="L133">        final double sizeRef = 1.0; // worst possible size (100%)</span>
+
+<span class="nc" id="L135">        final var list = new ArrayList&lt;RepetitionStats&gt;(repetitions);</span>
+<span class="nc bnc" id="L136" title="All 2 branches missed.">        for (int i = 1; i &lt;= repetitions; i++) {</span>
+<span class="nc" id="L137">            System.out.printf(&quot;Repetition %d/%d for algorithm %s\n&quot;, i, repetitions, algorithm);</span>
+<span class="nc" id="L138">            final List&lt;? extends Chromosome&lt;?&gt;&gt; testSuites = algorithm.findSolution();</span>
+<span class="nc" id="L139">            final double hyperVolume = Utils.computeHyperVolume(testSuites, coverageFF, sizeFF, covRef, sizeRef);</span>
+<span class="nc" id="L140">            final var testSuiteStats = makeTestSuiteStatsFrom(testSuites);</span>
+<span class="nc" id="L141">            final var repetitionStats = new RepetitionStats(i, testSuiteStats, hyperVolume);</span>
+<span class="nc" id="L142">            list.add(repetitionStats);</span>
+        }
+<span class="nc" id="L144">        return list;</span>
+    }
+
+    private List&lt;TestSuiteStats&gt; makeTestSuiteStatsFrom(
+            final List&lt;? extends Chromosome&lt;?&gt;&gt; testSuites) {
+<span class="nc" id="L149">        final var list = new ArrayList&lt;TestSuiteStats&gt;(testSuites.size());</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        for (final Chromosome&lt;?&gt; testSuiteChromosome : testSuites) {</span>
+<span class="nc" id="L151">            list.add(makeTestSuiteStatsFrom(testSuiteChromosome));</span>
+<span class="nc" id="L152">        }</span>
+<span class="nc" id="L153">        return list;</span>
+    }
+
+    private TestSuiteStats makeTestSuiteStatsFrom(final Chromosome&lt;?&gt; testSuiteChromosome) {
+<span class="nc" id="L157">        final List&lt;String&gt; testCaseNames = getTestCaseNamesFrom(testSuiteChromosome);</span>
+<span class="nc" id="L158">        final double coverage = getCoverageOf(testSuiteChromosome);</span>
+<span class="nc" id="L159">        final double size = getSizeOf(testSuiteChromosome);</span>
+<span class="nc" id="L160">        return new TestSuiteStats(testCaseNames, coverage, size);</span>
+    }
+
+    /**
+     * Extracts the test case names from the given test suite chromosome. This chromosome has been
+     * generated and returned by your search algorithm as part of the Pareto-front. The chromosome
+     * represents a test suite comprises a some test cases.
+     *
+     * @param testSuiteChromosome the test suite chromosome
+     * @return the names of the test cases in the test suite represented by the chromosome
+     * @apiNote The input type uses a wildcard type &quot;{@code ?}&quot;. This is because your custom
+     * subclass of {@code Chromosome} has not existed yet at the time of writing this code, so I
+     * couldn't specify it.
+     * @implSpec The names of these test cases shall be retrieved from the {@code testCases}
+     * array of this class. Due to the wildcard in the input type, you will need to downcast to your
+     * custom chromosome type before you can do so.
+     */
+    @SuppressWarnings(&quot;unchecked&quot;)
+    List&lt;String&gt; getTestCaseNamesFrom(final Chromosome&lt;?&gt; testSuiteChromosome) {
+
+<span class="nc" id="L180">        TestSuiteChromosome c = (TestSuiteChromosome) testSuiteChromosome;</span>
+
+<span class="nc" id="L182">        List&lt;String&gt; names = new ArrayList&lt;&gt;();</span>
+
+<span class="nc bnc" id="L184" title="All 2 branches missed.">        for (int index : c.getSelectedTestIndices()) {</span>
+<span class="nc" id="L185">            names.add(testCases[index]);</span>
+<span class="nc" id="L186">        }</span>
+
+<span class="nc" id="L188">        return names;</span>
+    }
+
+
+    /**
+     * Takes the given test suite chromosome as input and returns its relative/normalized coverage.
+     *
+     * @param testSuiteChromosome the test suite chromosome
+     * @return the relative coverage of the test suite
+     * @apiNote The input type uses a wildcard type &quot;{@code ?}&quot;. This is because your custom
+     * subclass of {@code Chromosome} has not existed yet at the time of writing this code, so I
+     * couldn't specify it.
+     * @implSpec As a consequence of the wildcard type, you'll need to downcast the
+     * `testSuiteChromosome` to your own chromosome type. If you want to reuse the `coverageFF`
+     * field of this class, you also need to cast the fitness function.
+     */
+    @SuppressWarnings(&quot;unchecked&quot;)
+    double getCoverageOf(final Chromosome&lt;?&gt; testSuiteChromosome) {
+
+<span class="nc" id="L207">        FitnessFunction&lt;TestSuiteChromosome&gt; coverageFF =</span>
+<span class="nc" id="L208">                (FitnessFunction&lt;TestSuiteChromosome&gt;) algorithmBuilder.getCoverageFF();</span>
+
+<span class="nc" id="L210">        return coverageFF.applyAsDouble((TestSuiteChromosome) testSuiteChromosome);</span>
+    }
+
+    /**
+     * Takes the given test suite chromosome as input and returns its relative/normalized size.
+     *
+     * @param testSuiteChromosome the test suite chromosome
+     * @return the relative size of the test suite
+     * @apiNote The input type uses a wildcard type &quot;{@code ?}&quot;. This is because your custom
+     * subclass of {@code Chromosome} has not existed yet at the time of writing this code, so I
+     * couldn't specify it.
+     * @implSpec As a consequence of the wildcard type, you'll need to downcast the
+     * `testSuiteChromosome` to your own chromosome type. If you want to reuse the `sizeFF` field of
+     * this class, you also need to cast the fitness function.
+     */
+    @SuppressWarnings(&quot;unchecked&quot;)
+    double getSizeOf(final Chromosome&lt;?&gt; testSuiteChromosome) {
+
+<span class="nc" id="L228">        FitnessFunction&lt;TestSuiteChromosome&gt; sizeFF =</span>
+<span class="nc" id="L229">                (FitnessFunction&lt;TestSuiteChromosome&gt;) algorithmBuilder.getSizeFF();</span>
+
+<span class="nc" id="L231">        return sizeFF.applyAsDouble((TestSuiteChromosome) testSuiteChromosome);</span>
+    }
+
+
+
+    /**
+     * Initializes the coverage matrix and the test case names.
+     *
+     * @throws Exception if an error occurs while initializing the coverage matrix and the test case names
+     */
+    private void setCoverageMatrixAndTestCaseNames() throws Exception {
+<span class="nc" id="L242">        final String fullyQualifiedClassName = packageName + &quot;.&quot; + className;</span>
+<span class="nc" id="L243">        CoverageTracker tracker = new CoverageTracker(fullyQualifiedClassName);</span>
+<span class="nc" id="L244">        this.coverageMatrix = tracker.getCoverageMatrix();</span>
+<span class="nc" id="L245">        this.testCases = tracker.getTestCases();</span>
+<span class="nc" id="L246">    }</span>
+
+    /**
+     * Formats the given duration in milliseconds as {@code HH:MM:SS:ssss}.
+     *
+     * @param durationInMillis the duration in milliseconds
+     * @return the formatted duration
+     */
+    private static String formatTime(final long durationInMillis) {
+<span class="nc" id="L255">        final long millis = durationInMillis % 1000;</span>
+<span class="nc" id="L256">        final long seconds = (durationInMillis / 1000) % 60;</span>
+<span class="nc" id="L257">        final long minutes = (durationInMillis / (1000 * 60)) % 60;</span>
+<span class="nc" id="L258">        final long hours = (durationInMillis / (1000 * 60 * 60)) % 24;</span>
+<span class="nc" id="L259">        return String.format(&quot;%02d:%02d:%02d.%d&quot;, hours, minutes, seconds, millis);</span>
+    }
+
+    /**
+     * Formats the given duration in milliseconds as {@code HH:MM:SS:ssss}. The fractional part of
+     * the duration is removed.
+     *
+     * @param fractionalMillis the duration
+     * @return the formatted duration
+     */
+    private static String formatTime(final double fractionalMillis) {
+<span class="nc" id="L270">        return formatTime((long) fractionalMillis);</span>
+    }
+
+    /**
+     * Container class reporting statistics about test suites, namely the names of its test cases,
+     * its coverage and size.
+     */
+    public record TestSuiteStats(List&lt;String&gt; testCaseNames, double coverage, double size) {
+<span class="nc" id="L278">        private static final String INDENT2 = &quot; &quot;.repeat(RepetitionStats.INDENT1.length()) + &quot;&gt; &quot;;</span>
+<span class="nc" id="L279">        private static final String INDENT3 = &quot; &quot;.repeat(INDENT2.length());</span>
+
+        public TestSuiteStats(
+                final List&lt;String&gt; testCaseNames,
+                final double coverage,
+<span class="nc" id="L284">                final double size) {</span>
+<span class="nc bnc" id="L285" title="All 2 branches missed.">            if (testCaseNames.isEmpty()) {</span>
+<span class="nc" id="L286">                throw new IllegalArgumentException(&quot;Expected a non-empty test suite&quot;);</span>
+            }
+
+<span class="nc bnc" id="L289" title="All 4 branches missed.">            if (!(0.0 &lt;= coverage &amp;&amp; coverage &lt;= 1.0)) {</span>
+<span class="nc" id="L290">                throw new IllegalArgumentException(&quot;Expected normalized coverage: &quot; + coverage);</span>
+            }
+
+<span class="nc bnc" id="L293" title="All 4 branches missed.">            if (!(0.0 &lt;= size &amp;&amp; size &lt;= 1.0)) {</span>
+<span class="nc" id="L294">                throw new IllegalArgumentException(&quot;Expected normalized size: &quot; + size);</span>
+            }
+
+<span class="nc" id="L297">            this.testCaseNames = new ArrayList&lt;&gt;(testCaseNames);</span>
+<span class="nc" id="L298">            this.testCaseNames.sort(null); // Sort test cases in lexicographical order.</span>
+<span class="nc" id="L299">            this.coverage = coverage;</span>
+<span class="nc" id="L300">            this.size = size;</span>
+<span class="nc" id="L301">        }</span>
+
+        @Override
+        public String toString() {
+<span class="nc" id="L305">            return String.format(&quot;%sTest Suite: %s%n&quot;, INDENT2, testCaseNames)</span>
+<span class="nc" id="L306">                    + String.format(&quot;%sCoverage:   %s%n&quot;, INDENT3, coverage)</span>
+<span class="nc" id="L307">                    + String.format(&quot;%sSize:       %s%n&quot;, INDENT3, size);</span>
+        }
+    }
+
+    public record RepetitionStats(int repetition, List&lt;TestSuiteStats&gt; testSuiteStats, double hyperVolume) {
+
+        private static final String INDENT1 = &quot; * &quot;;
+<span class="nc" id="L314">        private static final Comparator&lt;TestSuiteStats&gt; byCoverage =</span>
+<span class="nc" id="L315">                Comparator.comparingDouble(ts -&gt; ts.coverage);</span>
+
+        public RepetitionStats(
+                final int repetition,
+                final List&lt;TestSuiteStats&gt; testSuiteStats,
+<span class="nc" id="L320">                final double hyperVolume) {</span>
+<span class="nc bnc" id="L321" title="All 4 branches missed.">            if (!(0.0 &lt;= hyperVolume &amp;&amp; hyperVolume &lt;= 1.0)) {</span>
+<span class="nc" id="L322">                throw new IllegalArgumentException(&quot;Expected normalized hyper-volume: &quot;</span>
+                        + hyperVolume);
+            }
+
+<span class="nc" id="L326">            this.testSuiteStats = new ArrayList&lt;&gt;(testSuiteStats);</span>
+<span class="nc" id="L327">            this.testSuiteStats.sort(byCoverage);</span>
+<span class="nc" id="L328">            this.repetition = repetition;</span>
+<span class="nc" id="L329">            this.hyperVolume = hyperVolume;</span>
+<span class="nc" id="L330">        }</span>
+
+        @Override
+        public String toString() {
+<span class="nc" id="L334">            final var sb = new StringBuilder(</span>
+<span class="nc" id="L335">                    String.format(&quot;%sRepetition %d:\tHV %f\tFront Size %d%n&quot;,</span>
+<span class="nc" id="L336">                            INDENT1, repetition, hyperVolume, testSuiteStats.size()));</span>
+
+<span class="nc bnc" id="L338" title="All 2 branches missed.">            for (final var testSuiteStat : testSuiteStats) {</span>
+<span class="nc" id="L339">                sb.append(testSuiteStat.toString());</span>
+<span class="nc" id="L340">            }</span>
+
+<span class="nc" id="L342">            return sb.toString();</span>
+        }
+    }
+
+    public static final class AlgorithmStats {
+
+        private final SearchAlgorithmType algorithm;
+        private final List&lt;RepetitionStats&gt; repetitionStats;
+        private final DoubleSummaryStatistics hyperVolumeStats;
+        private final long totalTime;
+        private final double avgTime;
+
+        public AlgorithmStats(
+                final SearchAlgorithmType algorithm,
+                final List&lt;RepetitionStats&gt; repetitionStats,
+                final long totalTime,
+<span class="nc" id="L358">                final double avgTime) {</span>
+<span class="nc" id="L359">            this.algorithm = algorithm;</span>
+<span class="nc" id="L360">            this.repetitionStats = repetitionStats;</span>
+<span class="nc" id="L361">            this.hyperVolumeStats = repetitionStats.stream()</span>
+<span class="nc" id="L362">                    .collect(summarizingDouble(stat -&gt; stat.hyperVolume));</span>
+<span class="nc" id="L363">            this.totalTime = totalTime;</span>
+<span class="nc" id="L364">            this.avgTime = avgTime;</span>
+<span class="nc" id="L365">        }</span>
+
+        @Override
+        public String toString() {
+<span class="nc" id="L369">            final var sb = new StringBuilder(&quot;Results for &quot; + algorithm);</span>
+
+<span class="nc bnc" id="L371" title="All 2 branches missed.">            for (final var repetitionStat : repetitionStats) {</span>
+<span class="nc" id="L372">                sb.append(repetitionStat.toString());</span>
+<span class="nc" id="L373">            }</span>
+
+<span class="nc" id="L375">            sb.append(&quot;Summary:\n&quot;);</span>
+<span class="nc" id="L376">            sb.append(String.format(&quot;%s (hyper volumes):\tavg: %f\tmin: %f\tmax:%f%n&quot;,</span>
+                    algorithm,
+<span class="nc" id="L378">                    hyperVolumeStats.getAverage(),</span>
+<span class="nc" id="L379">                    hyperVolumeStats.getMin(),</span>
+<span class="nc" id="L380">                    hyperVolumeStats.getMax()));</span>
+<span class="nc" id="L381">            sb.append(String.format(&quot;%s (time):\ttotal: %s\tavg: %s%n&quot;,</span>
+                    algorithm,
+<span class="nc" id="L383">                    formatTime(totalTime),</span>
+<span class="nc" id="L384">                    formatTime(avgTime)));</span>
+
+<span class="nc" id="L386">            return sb.toString();</span>
+        }
+
+        public DoubleSummaryStatistics getHyperVolumeStats() {
+<span class="nc" id="L390">            return hyperVolumeStats;</span>
+        }
+    }
+
+}
+
+/**
+ * Converts supplied cli parameters to the respective {@link SearchAlgorithmType}.
+ */
+<span class="nc" id="L399">final class AlgorithmConverter implements CommandLine.ITypeConverter&lt;SearchAlgorithmType&gt; {</span>
+    @Override
+    public SearchAlgorithmType convert(String algorithm) {
+<span class="nc bnc" id="L402" title="All 3 branches missed.">        return switch (algorithm.toUpperCase()) {</span>
+<span class="nc" id="L403">            case &quot;RS&quot; -&gt; SearchAlgorithmType.RANDOM_SEARCH;</span>
+<span class="nc" id="L404">            case &quot;NSGA2&quot; -&gt; SearchAlgorithmType.NSGA_II;</span>
+<span class="nc" id="L405">            default -&gt; throw new IllegalArgumentException(&quot;The algorithm '&quot; + algorithm + &quot;' is not a valid option.&quot;);</span>
+        };
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

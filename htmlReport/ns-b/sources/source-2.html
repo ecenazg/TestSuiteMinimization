@@ -1,0 +1,117 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Option</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">de.uni_passau.fim.se2.sbse.suite_minimisation.examples.dependencies</a>
+</div>
+
+<h1>Coverage Summary for Class: Option (de.uni_passau.fim.se2.sbse.suite_minimisation.examples.dependencies)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">Option</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package de.uni_passau.fim.se2.sbse.suite_minimisation.examples.dependencies;
+&nbsp;/**
+&nbsp; * Describes a single command-line option. It maintains information regarding the short-name of the
+&nbsp; * option, the long-name, if any exists, a flag indicating if an argument is required for this
+&nbsp; * option, and a self-documenting description of the option.
+&nbsp; *
+&nbsp; * &lt;p&gt;An Option is not created independently, but is created through an instance of {@link Options}.
+&nbsp; * An Option is required to have at least a short or a long-name.
+&nbsp; *
+&nbsp; * &lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; once an {@link Option} has been added to an instance of {@link Options}, it&#39;s
+&nbsp; * required flag may not be changed anymore.
+&nbsp; */
+&nbsp;public interface Option {
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Returns the &#39;unique&#39; Option identifier.
+&nbsp;   *
+&nbsp;   * @return the &#39;unique&#39; Option identifier
+&nbsp;   */
+&nbsp;  String getKey();
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Retrieve the long name of this Option.
+&nbsp;   *
+&nbsp;   * @return Long name of this option, or null, if there is no long name
+&nbsp;   */
+&nbsp;  String getLongOpt();
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Query to see if this Option has a long name
+&nbsp;   *
+&nbsp;   * @return boolean flag indicating existence of a long name
+&nbsp;   */
+&nbsp;  boolean hasLongOpt();
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Query to see if this Option is mandatory
+&nbsp;   *
+&nbsp;   * @return boolean flag indicating whether this Option is mandatory
+&nbsp;   */
+&nbsp;  boolean isRequired();
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Sets whether this Option is mandatory.
+&nbsp;   *
+&nbsp;   * @param required specifies whether this Option is mandatory
+&nbsp;   */
+&nbsp;  void setRequired(final boolean required);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-12-13 22:10</div>
+</div>
+</body>
+</html>

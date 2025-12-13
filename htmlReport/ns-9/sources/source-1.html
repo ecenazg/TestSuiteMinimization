@@ -1,0 +1,209 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > MaxFitnessEvaluations</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">de.uni_passau.fim.se2.sbse.suite_minimisation.stopping_conditions</a>
+</div>
+
+<h1>Coverage Summary for Class: MaxFitnessEvaluations (de.uni_passau.fim.se2.sbse.suite_minimisation.stopping_conditions)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MaxFitnessEvaluations</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/14)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package de.uni_passau.fim.se2.sbse.suite_minimisation.stopping_conditions;
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; * A stopping condition that defines the search budget in terms of the maximum number of fitness
+&nbsp; * evaluations.
+&nbsp; * &lt;p&gt;
+&nbsp; * Whenever an algorithm samples a new solution and computes its fitness, the stopping condition
+&nbsp; * shall be notified of this. For example, a random search samples just one new solution per
+&nbsp; * iteration, and would notify this stopping condition just once per iteration. On the other hand,
+&nbsp; * NSGA-II creates an entire new population per generation and must compute the fitness values for
+&nbsp; * all chromosomes of the new population. Thus, it would notify this stopping condition &quot;population
+&nbsp; * size&quot; many times per generation.
+&nbsp; * &lt;p&gt;
+&nbsp; * Fitness functions and chromosomes may be implemented in such a way that they cache fitness
+&nbsp; * values. This has no impact on the notification of this stopping condition. A random search might
+&nbsp; * sample the same &quot;new&quot; value twice, and would still be notified twice, regardless if the fitness
+&nbsp; * value of this &quot;new&quot; solution has already been cached or not. Caching can have a positive impact
+&nbsp; * on the runtime and thus on the {@code MaxTime} stopping condition, though.
+&nbsp; *
+&nbsp; * @author Sebastian Schweikl
+&nbsp; */
+&nbsp;public final class MaxFitnessEvaluations implements StoppingCondition {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The maximum number of fitness evaluations.
+&nbsp;     */
+&nbsp;    private final int maxFitnessEvaluations;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The current number of fitness evaluations.
+&nbsp;     */
+&nbsp;    private int fitnessEvaluations;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a new stopping condition using the given number of fitness evaluations as search
+&nbsp;     * budget.
+&nbsp;     *
+&nbsp;     * @param maxFitnessEvaluations the number of fitness evaluations
+&nbsp;     */
+<b class="nc">&nbsp;    public MaxFitnessEvaluations(final int maxFitnessEvaluations) {</b>
+<b class="nc">&nbsp;        if (maxFitnessEvaluations &lt;= 0) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;fitness evaluations must be positive&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        this.maxFitnessEvaluations = maxFitnessEvaluations;</b>
+<b class="nc">&nbsp;        this.fitnessEvaluations = Integer.MAX_VALUE;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a new stopping condition using the given number of fitness evaluations as search
+&nbsp;     * budget.
+&nbsp;     *
+&nbsp;     * @param maxFitnessEvaluations the number of fitness evaluations
+&nbsp;     * @return the stopping condition
+&nbsp;     */
+&nbsp;    public static MaxFitnessEvaluations of(final int maxFitnessEvaluations) {
+<b class="nc">&nbsp;        return new MaxFitnessEvaluations(maxFitnessEvaluations);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void notifySearchStarted() {
+<b class="nc">&nbsp;        fitnessEvaluations = 0;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void notifyFitnessEvaluation() {
+<b class="nc">&nbsp;        fitnessEvaluations++;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void notifyFitnessEvaluations(final int evaluations) throws IllegalArgumentException {
+<b class="nc">&nbsp;        if (evaluations &lt; 0) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Negative number of evaluations: &quot; + evaluations);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        fitnessEvaluations += evaluations;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean searchMustStop() {
+<b class="nc">&nbsp;        return !(fitnessEvaluations &lt; maxFitnessEvaluations);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public double getProgress() {
+<b class="nc">&nbsp;        return fitnessEvaluations / (double) maxFitnessEvaluations;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String toString() {
+<b class="nc">&nbsp;        return String.format(&quot;%s(%d)&quot;, getClass().getSimpleName(), maxFitnessEvaluations);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-12-13 22:10</div>
+</div>
+</body>
+</html>

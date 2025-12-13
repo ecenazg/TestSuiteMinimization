@@ -1,0 +1,507 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > RationalTest</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">de.uni_passau.fim.se2.sbse.suite_minimisation.examples</a>
+</div>
+
+<h1>Coverage Summary for Class: RationalTest (de.uni_passau.fim.se2.sbse.suite_minimisation.examples)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">RationalTest</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/48)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/183)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package de.uni_passau.fim.se2.sbse.suite_minimisation.examples;
+&nbsp;
+&nbsp;import org.junit.jupiter.api.Test;
+&nbsp;
+&nbsp;import static org.junit.jupiter.api.Assertions.*;
+&nbsp;
+<b class="nc">&nbsp;public class RationalTest {</b>
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test0() throws Throwable {
+&nbsp;        try {
+<b class="nc">&nbsp;            Rational r = new Rational(42, 0);</b>
+<b class="nc">&nbsp;            fail(&quot;&quot;);</b>
+&nbsp;        } catch (ArithmeticException e) {
+<b class="nc">&nbsp;            assertEquals(&quot;&quot;, e.getMessage());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test1() throws Throwable {
+&nbsp;        try {
+<b class="nc">&nbsp;            new Rational(0, 0);</b>
+<b class="nc">&nbsp;            fail(&quot;...&quot;);</b>
+&nbsp;        } catch (ArithmeticException e) {
+&nbsp;            // ok
+&nbsp;        }
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test2() throws Throwable {
+<b class="nc">&nbsp;        Rational rational = new Rational(7, 8);</b>
+<b class="nc">&nbsp;        assertEquals(7, rational.num());</b>
+<b class="nc">&nbsp;        assertEquals(8, rational.denom());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test3() throws Throwable {
+&nbsp;        try {
+<b class="nc">&nbsp;            Rational rational = new Rational(1, 0);</b>
+<b class="nc">&nbsp;            fail(&quot;Expected exception did not occur.&quot;);</b>
+&nbsp;        } catch (ArithmeticException e) {
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test4() throws Throwable {
+<b class="nc">&nbsp;        Rational rational = new Rational(-1, -2);</b>
+<b class="nc">&nbsp;        rational.reduce();</b>
+<b class="nc">&nbsp;        assertEquals(1, rational.num());</b>
+<b class="nc">&nbsp;        assertEquals(2, rational.denom());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test5() throws Throwable {
+<b class="nc">&nbsp;        Rational rat = new Rational(1, -2);</b>
+<b class="nc">&nbsp;        Rational rat2 = new Rational(-1, 2);</b>
+<b class="nc">&nbsp;        rat.mul(rat2);</b>
+<b class="nc">&nbsp;        assertEquals(rat.num(), 1);</b>
+<b class="nc">&nbsp;        assertEquals(rat.denom(), 4);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test6() throws Throwable {
+<b class="nc">&nbsp;        Rational rat = new Rational(15, 40);</b>
+<b class="nc">&nbsp;        rat.reduce();</b>
+<b class="nc">&nbsp;        assertEquals(rat.num(), 3);</b>
+<b class="nc">&nbsp;        assertEquals(rat.denom(), 8);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test7() throws Throwable {
+<b class="nc">&nbsp;        Rational rat = new Rational(12, 40);</b>
+<b class="nc">&nbsp;        Rational rat2 = new Rational(8, 40);</b>
+<b class="nc">&nbsp;        rat.add(rat2);</b>
+<b class="nc">&nbsp;        assertEquals(rat.num(), 20);</b>
+<b class="nc">&nbsp;        assertEquals(rat.denom(), 40);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test8() throws Throwable {
+<b class="nc">&nbsp;        Rational rat = new Rational(12, 40);</b>
+<b class="nc">&nbsp;        Rational rat2 = new Rational(8, -65);</b>
+<b class="nc">&nbsp;        rat.add(rat2);</b>
+<b class="nc">&nbsp;        assertEquals(rat.num(), (12 * -65) + (8 * 40));</b>
+<b class="nc">&nbsp;        assertEquals(rat.denom(), 40 * -65);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test9() throws Throwable {
+<b class="nc">&nbsp;        Rational rat = new Rational(10, 40);</b>
+<b class="nc">&nbsp;        Rational rat2 = new Rational(20, 40);</b>
+<b class="nc">&nbsp;        rat.add(rat2);</b>
+<b class="nc">&nbsp;        rat.reduce();</b>
+<b class="nc">&nbsp;        assertEquals(3, rat.num());</b>
+<b class="nc">&nbsp;        assertEquals(4, rat.denom());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test10() throws Throwable {
+<b class="nc">&nbsp;        Rational rat = new Rational(0, 1);</b>
+<b class="nc">&nbsp;        Rational rat2 = new Rational(-4, 1);</b>
+<b class="nc">&nbsp;        rat2.sub(rat);</b>
+<b class="nc">&nbsp;        assertEquals(-4, rat2.num());</b>
+<b class="nc">&nbsp;        assertEquals(1, rat2.denom());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test11() throws Throwable {
+<b class="nc">&nbsp;        Rational rat = new Rational(-2, 0);</b>
+<b class="nc">&nbsp;        rat.reduce();</b>
+<b class="nc">&nbsp;        Rational correct = new Rational(1, 0);</b>
+<b class="nc">&nbsp;        assertEquals(correct, rat);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test12() throws Throwable {
+<b class="nc">&nbsp;        Rational rat = new Rational(4, -5);</b>
+<b class="nc">&nbsp;        Rational sub = new Rational(8, -5);</b>
+<b class="nc">&nbsp;        rat.sub(sub);</b>
+<b class="nc">&nbsp;        assertEquals(1, rat.num());</b>
+<b class="nc">&nbsp;        assertEquals(1, rat.denom());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test13() throws Throwable {
+&nbsp;        // test here!
+<b class="nc">&nbsp;        Rational rational = new Rational(-2, -2);</b>
+<b class="nc">&nbsp;        Rational rationalMultiplier = new Rational(1, 1);</b>
+<b class="nc">&nbsp;        rational.mul(rationalMultiplier);</b>
+<b class="nc">&nbsp;        assertEquals(rational.num(), 2);</b>
+<b class="nc">&nbsp;        assertEquals(rational.denom(), 2);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test14() throws Throwable {
+<b class="nc">&nbsp;        Rational rat = new Rational(2, 3);</b>
+<b class="nc">&nbsp;        Rational ratOther = new Rational(3, 2);</b>
+<b class="nc">&nbsp;        assertTrue(rat.equals(ratOther));</b>
+<b class="nc">&nbsp;        assertEquals(rat.num(), 2);</b>
+<b class="nc">&nbsp;        assertEquals(ratOther.num(), 3);</b>
+<b class="nc">&nbsp;        assertEquals(rat.denom(), 3);</b>
+<b class="nc">&nbsp;        assertEquals(ratOther.denom(), 2);</b>
+&nbsp;
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test15() throws Throwable {
+<b class="nc">&nbsp;        Rational rat = new Rational(1, 0);</b>
+<b class="nc">&nbsp;        assertEquals(rat.num(), 1);</b>
+<b class="nc">&nbsp;        assertEquals(rat.denom(), 0);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test16() throws Throwable {
+<b class="nc">&nbsp;        Rational rational = new Rational(-1, -1);</b>
+<b class="nc">&nbsp;        long x = rational.num() / rational.gcd(rational.num(), rational.denom());</b>
+<b class="nc">&nbsp;        rational.reduce();</b>
+<b class="nc">&nbsp;        assertEquals(x, rational.num());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test17() throws Throwable {
+<b class="nc">&nbsp;        Rational rational = new Rational(1, 2);</b>
+<b class="nc">&nbsp;        Rational sub = new Rational(1, 1);</b>
+<b class="nc">&nbsp;        rational.sub(sub);</b>
+<b class="nc">&nbsp;        assertEquals(-1, rational.num());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test18() throws Throwable {
+<b class="nc">&nbsp;        Rational rational = new Rational(2, 2);</b>
+<b class="nc">&nbsp;        long num = 2;</b>
+<b class="nc">&nbsp;        rational.reduce();</b>
+<b class="nc">&nbsp;        assertEquals(1, rational.num());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test19() throws Throwable {
+<b class="nc">&nbsp;        Rational rational = new Rational(2, 2);</b>
+<b class="nc">&nbsp;        Rational add = new Rational(1, 1);</b>
+<b class="nc">&nbsp;        rational.add(add);</b>
+<b class="nc">&nbsp;        long num = 4;</b>
+<b class="nc">&nbsp;        assertEquals(4, rational.num());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test20() throws Throwable {
+&nbsp;
+<b class="nc">&nbsp;        Rational rational = new Rational(0, 1);</b>
+<b class="nc">&nbsp;        assertEquals(1, rational.denom());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test21() throws Throwable {
+<b class="nc">&nbsp;        Rational rational = new Rational(2, 2);</b>
+<b class="nc">&nbsp;        Rational rational2 = new Rational(1, -2);</b>
+<b class="nc">&nbsp;        rational.add(rational2);</b>
+<b class="nc">&nbsp;        assertEquals(-1, rational.num());</b>
+<b class="nc">&nbsp;        assertEquals(2, rational.num());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test22() throws Throwable {
+<b class="nc">&nbsp;        Rational rational = new Rational(-5, 35);</b>
+<b class="nc">&nbsp;        Rational rational2 = new Rational(5, 20);</b>
+<b class="nc">&nbsp;        rational.sub(rational2);</b>
+<b class="nc">&nbsp;        assertEquals(-1, rational.num());</b>
+<b class="nc">&nbsp;        assertEquals(7, rational.denom());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test23() throws Throwable {
+<b class="nc">&nbsp;        Rational rational = new Rational(-5, 35);</b>
+<b class="nc">&nbsp;        Rational rational2 = new Rational(5, 20);</b>
+<b class="nc">&nbsp;        rational.sub(rational2);</b>
+<b class="nc">&nbsp;        assertEquals(rational, rational2);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test24() throws Throwable {
+<b class="nc">&nbsp;        Rational rational = new Rational(-5, 35);</b>
+<b class="nc">&nbsp;        Rational rational2 = new Rational(-5, 35);</b>
+<b class="nc">&nbsp;        boolean test = rational.equals(rational2);</b>
+<b class="nc">&nbsp;        assertTrue(test);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test25() throws Throwable {
+<b class="nc">&nbsp;        Rational rational = new Rational(-5, -35);</b>
+<b class="nc">&nbsp;        Rational rational2 = new Rational(-5, 35);</b>
+<b class="nc">&nbsp;        boolean test = rational.equals(rational2);</b>
+<b class="nc">&nbsp;        assertFalse(test);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test26() throws Throwable {
+&nbsp;        try {
+<b class="nc">&nbsp;            Rational rational = new Rational(-5, 0);</b>
+&nbsp;        } catch (ArithmeticException e) {
+<b class="nc">&nbsp;            assertTrue(true);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test27() throws Throwable {
+<b class="nc">&nbsp;        Rational rational = new Rational(-5, -35);</b>
+<b class="nc">&nbsp;        Rational rational2 = new Rational(1, 1);</b>
+<b class="nc">&nbsp;        rational.div(rational2);</b>
+<b class="nc">&nbsp;        assertEquals(5, rational.num());</b>
+<b class="nc">&nbsp;        assertEquals(35, rational.denom());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test28() throws Throwable {
+<b class="nc">&nbsp;        Rational rational = new Rational(-5, -35);</b>
+<b class="nc">&nbsp;        Rational rational2 = new Rational(2, 35);</b>
+<b class="nc">&nbsp;        rational.add(rational2);</b>
+<b class="nc">&nbsp;        assertEquals(5, rational.num());</b>
+<b class="nc">&nbsp;        assertEquals(35, rational.denom());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test29() throws Throwable {
+<b class="nc">&nbsp;        Rational rational = new Rational(2, 4);</b>
+<b class="nc">&nbsp;        assertEquals(2, rational.num());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test30() throws Throwable {
+<b class="nc">&nbsp;        Rational rational = new Rational(2, 4);</b>
+<b class="nc">&nbsp;        Rational rational2 = new Rational(4, 8);</b>
+<b class="nc">&nbsp;        assertTrue(rational.equals(rational2));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test31() throws Throwable {
+<b class="nc">&nbsp;        Rational rational = new Rational(2, 4);</b>
+<b class="nc">&nbsp;        assertEquals(2, rational.gcd(4, 8));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test32() throws Throwable {
+&nbsp;        // test here!
+<b class="nc">&nbsp;        Rational rat = new Rational(2, 2);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test33() throws Throwable {
+&nbsp;        // test here!
+<b class="nc">&nbsp;        Rational rat = new Rational(2, 2);</b>
+<b class="nc">&nbsp;        assertEquals(2, rat.gcd(2, 2));</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test34() throws Throwable {
+&nbsp;        // test here!
+<b class="nc">&nbsp;        Rational r = new Rational(2, 1);</b>
+<b class="nc">&nbsp;        r.reduce();</b>
+<b class="nc">&nbsp;        assertEquals(2, r.num());</b>
+<b class="nc">&nbsp;        assertEquals(1, r.denom());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test35() throws Throwable {
+<b class="nc">&nbsp;        Rational a = new Rational(1, 1);</b>
+<b class="nc">&nbsp;        a.reduce();</b>
+<b class="nc">&nbsp;        assertEquals(-1, a.num());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test36() throws Throwable {
+<b class="nc">&nbsp;        Rational a = new Rational(1, 2);</b>
+<b class="nc">&nbsp;        assertEquals(2, a.denom());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test37() throws Throwable {
+<b class="nc">&nbsp;        Rational a = new Rational(2, 1);</b>
+<b class="nc">&nbsp;        assertEquals(2, a.num());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test38() throws Throwable {
+<b class="nc">&nbsp;        Rational a = new Rational(-2, -1);</b>
+<b class="nc">&nbsp;        assertEquals(2, a.num());</b>
+<b class="nc">&nbsp;        assertEquals(1, a.denom());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test39() throws Throwable {
+<b class="nc">&nbsp;        Rational a = new Rational(-2, -1);</b>
+<b class="nc">&nbsp;        a.reduce();</b>
+<b class="nc">&nbsp;        assertEquals(2, a.num());</b>
+<b class="nc">&nbsp;        assertEquals(1, a.denom());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test40() throws Throwable {
+<b class="nc">&nbsp;        Rational a = new Rational(4, 2);</b>
+<b class="nc">&nbsp;        Rational b = new Rational(1, 0);</b>
+<b class="nc">&nbsp;        long toTest = a.gcd(4, 2);</b>
+<b class="nc">&nbsp;        long toTest2 = a.gcd(1, 0);</b>
+<b class="nc">&nbsp;        assertEquals(1, toTest2);</b>
+<b class="nc">&nbsp;        assertEquals(2, toTest);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test41() throws Throwable {
+<b class="nc">&nbsp;        Rational a = new Rational(4, 2);</b>
+<b class="nc">&nbsp;        long toTest = a.gcd(4, 2);</b>
+<b class="nc">&nbsp;        long toTest2 = a.gcd(1, 0);</b>
+<b class="nc">&nbsp;        assertEquals(1, toTest2);</b>
+<b class="nc">&nbsp;        assertEquals(2, toTest);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test42() throws Throwable {
+<b class="nc">&nbsp;        Rational r1 = new Rational(2, 2);</b>
+<b class="nc">&nbsp;        Rational r2 = new Rational(-1, 2);</b>
+<b class="nc">&nbsp;        Rational expected = new Rational(1, 2);</b>
+<b class="nc">&nbsp;        long gcd = r2.gcd(1, -2);</b>
+&nbsp;
+<b class="nc">&nbsp;        r1.add(r2);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(r1, expected);</b>
+<b class="nc">&nbsp;        assertEquals(gcd, 1);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test43() throws Throwable {
+<b class="nc">&nbsp;        Rational a = new Rational(2, 3);</b>
+<b class="nc">&nbsp;        Rational b = new Rational(5, 6);</b>
+<b class="nc">&nbsp;        a.add(b);</b>
+<b class="nc">&nbsp;        assertTrue(a.num() == 2);</b>
+<b class="nc">&nbsp;        assertTrue(a.denom() == 3);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test44() throws Throwable {
+<b class="nc">&nbsp;        Rational a = new Rational(2, 3);</b>
+<b class="nc">&nbsp;        Rational b = new Rational(5, 6);</b>
+<b class="nc">&nbsp;        a.add(b);</b>
+<b class="nc">&nbsp;        assertEquals(2, a.num());</b>
+<b class="nc">&nbsp;        assertEquals(3, a.denom());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test45() throws Throwable {
+<b class="nc">&nbsp;        Rational a = new Rational(2, 3);</b>
+<b class="nc">&nbsp;        Rational b = new Rational(5, 6);</b>
+<b class="nc">&nbsp;        a.add(b);</b>
+<b class="nc">&nbsp;        assertEquals(2, a.num());</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test46() throws Throwable {
+<b class="nc">&nbsp;        Rational a = new Rational(1, 0);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-12-13 22:10</div>
+</div>
+</body>
+</html>

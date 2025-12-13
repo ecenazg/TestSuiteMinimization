@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NSGA2.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Test-Suite-Minimisation</a> &gt; <a href="index.source.html" class="el_package">de.uni_passau.fim.se2.sbse.suite_minimisation.algorithms</a> &gt; <span class="el_source">NSGA2.java</span></div><h1>NSGA2.java</h1><pre class="source lang-java linenums">package de.uni_passau.fim.se2.sbse.suite_minimisation.algorithms;
+
+import de.uni_passau.fim.se2.sbse.suite_minimisation.chromosomes.ChromosomeGenerator;
+import de.uni_passau.fim.se2.sbse.suite_minimisation.chromosomes.TestSuiteChromosome;
+import de.uni_passau.fim.se2.sbse.suite_minimisation.fitness_functions.FitnessFunction;
+import de.uni_passau.fim.se2.sbse.suite_minimisation.selection.BinaryTournamentSelection;
+import de.uni_passau.fim.se2.sbse.suite_minimisation.selection.Selection;
+import de.uni_passau.fim.se2.sbse.suite_minimisation.stopping_conditions.StoppingCondition;
+import de.uni_passau.fim.se2.sbse.suite_minimisation.utils.Pair;
+
+import java.util.*;
+
+import static java.util.Objects.requireNonNull;
+
+public class NSGA2 implements GeneticAlgorithm&lt;TestSuiteChromosome&gt; {
+
+    private final StoppingCondition stoppingCondition;
+    private final Random random;
+
+    private final int populationSize;
+
+    private final ChromosomeGenerator&lt;TestSuiteChromosome&gt; generator;
+    private Selection&lt;TestSuiteChromosome&gt; selection;
+
+    private final FitnessFunction&lt;TestSuiteChromosome&gt; sizeFF;      // minimizing
+    private final FitnessFunction&lt;TestSuiteChromosome&gt; coverageFF;   // maximizing
+
+    // Metadata used by tournament comparator
+<span class="fc" id="L29">    private final Map&lt;TestSuiteChromosome, Integer&gt; rank = new IdentityHashMap&lt;&gt;();</span>
+<span class="fc" id="L30">    private final Map&lt;TestSuiteChromosome, Double&gt; crowding = new IdentityHashMap&lt;&gt;();</span>
+
+    public NSGA2(
+            StoppingCondition stoppingCondition,
+            Random random,
+            int populationSize,
+            ChromosomeGenerator&lt;TestSuiteChromosome&gt; generator,
+            FitnessFunction&lt;TestSuiteChromosome&gt; sizeFF,
+            FitnessFunction&lt;TestSuiteChromosome&gt; coverageFF
+<span class="fc" id="L39">    ) {</span>
+<span class="fc" id="L40">        this.stoppingCondition = requireNonNull(stoppingCondition);</span>
+<span class="fc" id="L41">        this.random = requireNonNull(random);</span>
+<span class="fc" id="L42">        this.populationSize = populationSize;</span>
+<span class="fc" id="L43">        this.generator = requireNonNull(generator);</span>
+<span class="fc" id="L44">        this.sizeFF = requireNonNull(sizeFF);</span>
+<span class="fc" id="L45">        this.coverageFF = requireNonNull(coverageFF);</span>
+<span class="fc" id="L46">    }</span>
+
+    @Override
+    public List&lt;TestSuiteChromosome&gt; findSolution() {
+<span class="fc" id="L50">        notifySearchStarted();</span>
+
+        // 1) init population
+<span class="fc" id="L53">        List&lt;TestSuiteChromosome&gt; population = new ArrayList&lt;&gt;(populationSize);</span>
+<span class="fc bfc" id="L54" title="All 4 branches covered.">        while (population.size() &lt; populationSize &amp;&amp; !searchMustStop()) {</span>
+<span class="fc" id="L55">            TestSuiteChromosome c = generator.get();</span>
+<span class="fc" id="L56">            evaluate(c);</span>
+<span class="fc" id="L57">            population.add(c);</span>
+<span class="fc" id="L58">        }</span>
+
+        // 2) generations
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        while (!searchMustStop()) {</span>
+
+            // update rank + crowding for parent selection
+<span class="fc" id="L64">            List&lt;List&lt;TestSuiteChromosome&gt;&gt; fronts = fastNonDominatedSort(population);</span>
+<span class="fc" id="L65">            assignRankAndCrowding(fronts);</span>
+
+<span class="fc" id="L67">            this.selection = new BinaryTournamentSelection&lt;&gt;(</span>
+                    (a, b) -&gt; {
+<span class="fc" id="L69">                        int ra = rank.get(a);</span>
+<span class="fc" id="L70">                        int rb = rank.get(b);</span>
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">                        if (ra != rb) return Integer.compare(rb, ra);</span>
+
+<span class="fc" id="L73">                        double ca = crowding.get(a);</span>
+<span class="fc" id="L74">                        double cb = crowding.get(b);</span>
+<span class="fc" id="L75">                        return Double.compare(ca, cb);</span>
+                    },
+                    random
+            );
+
+
+            // create offspring of size N
+<span class="fc" id="L82">            List&lt;TestSuiteChromosome&gt; offspring = new ArrayList&lt;&gt;(populationSize);</span>
+<span class="pc bpc" id="L83" title="1 of 4 branches missed.">            while (offspring.size() &lt; populationSize &amp;&amp; !searchMustStop()) {</span>
+<span class="fc" id="L84">                TestSuiteChromosome p1 = selection.apply(population);</span>
+<span class="fc" id="L85">                TestSuiteChromosome p2 = selection.apply(population);</span>
+
+<span class="fc" id="L87">                Pair&lt;TestSuiteChromosome&gt; children = p1.crossover(p2);</span>
+<span class="fc" id="L88">                TestSuiteChromosome c1 = children.getFst().mutate();</span>
+<span class="fc" id="L89">                TestSuiteChromosome c2 = children.getSnd().mutate();</span>
+
+<span class="fc" id="L91">                evaluate(c1);</span>
+<span class="fc" id="L92">                offspring.add(c1);</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">                if (offspring.size() &lt; populationSize) {</span>
+<span class="fc" id="L94">                    evaluate(c2);</span>
+<span class="fc" id="L95">                    offspring.add(c2);</span>
+                }
+<span class="fc" id="L97">            }</span>
+
+            // combine and select next population
+<span class="fc" id="L100">            List&lt;TestSuiteChromosome&gt; combined = new ArrayList&lt;&gt;(population.size() + offspring.size());</span>
+<span class="fc" id="L101">            combined.addAll(population);</span>
+<span class="fc" id="L102">            combined.addAll(offspring);</span>
+
+<span class="fc" id="L104">            List&lt;List&lt;TestSuiteChromosome&gt;&gt; combinedFronts = fastNonDominatedSort(combined);</span>
+<span class="fc" id="L105">            assignRankAndCrowding(combinedFronts);</span>
+
+<span class="fc" id="L107">            population = selectNextPopulation(combinedFronts);</span>
+<span class="fc" id="L108">        }</span>
+
+        // return first Pareto front of final population
+<span class="fc" id="L111">        List&lt;List&lt;TestSuiteChromosome&gt;&gt; finalFronts = fastNonDominatedSort(population);</span>
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">        return finalFronts.isEmpty() ? List.of() : finalFronts.get(0);</span>
+    }
+
+    @Override
+    public StoppingCondition getStoppingCondition() {
+<span class="fc" id="L117">        return stoppingCondition;</span>
+    }
+
+    // ---------- evaluation ----------
+    private void evaluate(TestSuiteChromosome c) {
+        // one evaluation budget per chromosome (even though we compute two objectives)
+<span class="fc" id="L123">        sizeFF.applyAsDouble(c);</span>
+<span class="fc" id="L124">        coverageFF.applyAsDouble(c);</span>
+<span class="fc" id="L125">        notifyFitnessEvaluation();</span>
+<span class="fc" id="L126">    }</span>
+
+    // ---------- dominance ----------
+    private boolean dominates(TestSuiteChromosome a, TestSuiteChromosome b) {
+<span class="fc" id="L130">        double aSize = sizeFF.applyAsDouble(a);</span>
+<span class="fc" id="L131">        double bSize = sizeFF.applyAsDouble(b);</span>
+
+<span class="fc" id="L133">        double aCov = coverageFF.applyAsDouble(a);</span>
+<span class="fc" id="L134">        double bCov = coverageFF.applyAsDouble(b);</span>
+
+<span class="fc bfc" id="L136" title="All 4 branches covered.">        boolean notWorseAll = (aSize &lt;= bSize) &amp;&amp; (aCov &gt;= bCov);</span>
+<span class="fc bfc" id="L137" title="All 4 branches covered.">        boolean betterOne = (aSize &lt; bSize) || (aCov &gt; bCov);</span>
+<span class="pc bpc" id="L138" title="1 of 4 branches missed.">        return notWorseAll &amp;&amp; betterOne;</span>
+    }
+
+    // ---------- NSGA-II: fast non-dominated sort ----------
+    private List&lt;List&lt;TestSuiteChromosome&gt;&gt; fastNonDominatedSort(List&lt;TestSuiteChromosome&gt; pop) {
+<span class="fc" id="L143">        Map&lt;TestSuiteChromosome, List&lt;TestSuiteChromosome&gt;&gt; S = new IdentityHashMap&lt;&gt;();</span>
+<span class="fc" id="L144">        Map&lt;TestSuiteChromosome, Integer&gt; n = new IdentityHashMap&lt;&gt;();</span>
+
+<span class="fc" id="L146">        List&lt;List&lt;TestSuiteChromosome&gt;&gt; fronts = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L147">        List&lt;TestSuiteChromosome&gt; first = new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L149" title="All 2 branches covered.">        for (TestSuiteChromosome p : pop) {</span>
+<span class="fc" id="L150">            S.put(p, new ArrayList&lt;&gt;());</span>
+<span class="fc" id="L151">            n.put(p, 0);</span>
+
+<span class="fc bfc" id="L153" title="All 2 branches covered.">            for (TestSuiteChromosome q : pop) {</span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">                if (p == q) continue;</span>
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">                if (dominates(p, q)) {</span>
+<span class="nc" id="L156">                    S.get(p).add(q);</span>
+<span class="pc bpc" id="L157" title="1 of 2 branches missed.">                } else if (dominates(q, p)) {</span>
+<span class="nc" id="L158">                    n.put(p, n.get(p) + 1);</span>
+                }
+<span class="fc" id="L160">            }</span>
+
+<span class="pc bpc" id="L162" title="1 of 2 branches missed.">            if (n.get(p) == 0) first.add(p);</span>
+<span class="fc" id="L163">        }</span>
+
+<span class="fc" id="L165">        fronts.add(first);</span>
+
+<span class="fc" id="L167">        int i = 0;</span>
+<span class="pc bpc" id="L168" title="1 of 4 branches missed.">        while (i &lt; fronts.size() &amp;&amp; !fronts.get(i).isEmpty()) {</span>
+<span class="fc" id="L169">            List&lt;TestSuiteChromosome&gt; next = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L170" title="All 2 branches covered.">            for (TestSuiteChromosome p : fronts.get(i)) {</span>
+<span class="pc bpc" id="L171" title="1 of 2 branches missed.">                for (TestSuiteChromosome q : S.get(p)) {</span>
+<span class="nc" id="L172">                    n.put(q, n.get(q) - 1);</span>
+<span class="nc bnc" id="L173" title="All 2 branches missed.">                    if (n.get(q) == 0) next.add(q);</span>
+<span class="nc" id="L174">                }</span>
+<span class="fc" id="L175">            }</span>
+<span class="fc" id="L176">            i++;</span>
+<span class="pc bpc" id="L177" title="1 of 2 branches missed.">            if (!next.isEmpty()) fronts.add(next);</span>
+<span class="fc" id="L178">        }</span>
+
+<span class="fc" id="L180">        return fronts;</span>
+    }
+
+    // ---------- NSGA-II: crowding distance ----------
+    private void assignRankAndCrowding(List&lt;List&lt;TestSuiteChromosome&gt;&gt; fronts) {
+<span class="fc" id="L185">        rank.clear();</span>
+<span class="fc" id="L186">        crowding.clear();</span>
+
+<span class="fc bfc" id="L188" title="All 2 branches covered.">        for (int i = 0; i &lt; fronts.size(); i++) {</span>
+<span class="fc" id="L189">            List&lt;TestSuiteChromosome&gt; front = fronts.get(i);</span>
+<span class="fc bfc" id="L190" title="All 2 branches covered.">            for (TestSuiteChromosome c : front) rank.put(c, i);</span>
+<span class="fc" id="L191">            computeCrowdingDistance(front);</span>
+        }
+<span class="fc" id="L193">    }</span>
+
+    private void computeCrowdingDistance(List&lt;TestSuiteChromosome&gt; front) {
+<span class="fc" id="L196">        int n = front.size();</span>
+<span class="pc bpc" id="L197" title="1 of 2 branches missed.">        if (n == 0) return;</span>
+
+<span class="fc bfc" id="L199" title="All 2 branches covered.">        for (TestSuiteChromosome c : front) crowding.put(c, 0.0);</span>
+<span class="pc bpc" id="L200" title="1 of 2 branches missed.">        if (n &lt;= 2) {</span>
+<span class="nc bnc" id="L201" title="All 2 branches missed.">            for (TestSuiteChromosome c : front) crowding.put(c, Double.POSITIVE_INFINITY);</span>
+<span class="nc" id="L202">            return;</span>
+        }
+
+        // Objective 1: size (min)
+<span class="fc" id="L206">        front.sort(Comparator.comparingDouble(c -&gt; sizeFF.applyAsDouble(c)));</span>
+<span class="fc" id="L207">        crowding.put(front.get(0), Double.POSITIVE_INFINITY);</span>
+<span class="fc" id="L208">        crowding.put(front.get(n - 1), Double.POSITIVE_INFINITY);</span>
+
+<span class="fc" id="L210">        double min1 = sizeFF.applyAsDouble(front.get(0));</span>
+<span class="fc" id="L211">        double max1 = sizeFF.applyAsDouble(front.get(n - 1));</span>
+<span class="fc" id="L212">        double range1 = max1 - min1;</span>
+
+<span class="fc bfc" id="L214" title="All 2 branches covered.">        if (range1 &gt; 0) {</span>
+<span class="fc bfc" id="L215" title="All 2 branches covered.">            for (int i = 1; i &lt; n - 1; i++) {</span>
+<span class="fc" id="L216">                double prev = sizeFF.applyAsDouble(front.get(i - 1));</span>
+<span class="fc" id="L217">                double next = sizeFF.applyAsDouble(front.get(i + 1));</span>
+<span class="fc" id="L218">                crowding.put(front.get(i), crowding.get(front.get(i)) + (next - prev) / range1);</span>
+            }
+        }
+
+        // Objective 2: coverage (max) -&gt; sort ascending still fine for distance, we use raw values
+<span class="fc" id="L223">        front.sort(Comparator.comparingDouble(c -&gt; coverageFF.applyAsDouble(c)));</span>
+<span class="fc" id="L224">        crowding.put(front.get(0), Double.POSITIVE_INFINITY);</span>
+<span class="fc" id="L225">        crowding.put(front.get(n - 1), Double.POSITIVE_INFINITY);</span>
+
+<span class="fc" id="L227">        double min2 = coverageFF.applyAsDouble(front.get(0));</span>
+<span class="fc" id="L228">        double max2 = coverageFF.applyAsDouble(front.get(n - 1));</span>
+<span class="fc" id="L229">        double range2 = max2 - min2;</span>
+
+<span class="fc bfc" id="L231" title="All 2 branches covered.">        if (range2 &gt; 0) {</span>
+<span class="fc bfc" id="L232" title="All 2 branches covered.">            for (int i = 1; i &lt; n - 1; i++) {</span>
+<span class="fc" id="L233">                double prev = coverageFF.applyAsDouble(front.get(i - 1));</span>
+<span class="fc" id="L234">                double next = coverageFF.applyAsDouble(front.get(i + 1));</span>
+<span class="fc" id="L235">                crowding.put(front.get(i), crowding.get(front.get(i)) + (next - prev) / range2);</span>
+            }
+        }
+<span class="fc" id="L238">    }</span>
+
+    // ---------- survivor selection ----------
+    private List&lt;TestSuiteChromosome&gt; selectNextPopulation(List&lt;List&lt;TestSuiteChromosome&gt;&gt; fronts) {
+<span class="fc" id="L242">        List&lt;TestSuiteChromosome&gt; next = new ArrayList&lt;&gt;(populationSize);</span>
+
+<span class="pc bpc" id="L244" title="1 of 2 branches missed.">        for (List&lt;TestSuiteChromosome&gt; front : fronts) {</span>
+<span class="pc bpc" id="L245" title="1 of 2 branches missed.">            if (next.size() + front.size() &lt;= populationSize) {</span>
+<span class="nc" id="L246">                next.addAll(front);</span>
+            } else {
+                // fill remaining by descending crowding distance
+<span class="fc" id="L249">                front.sort((a, b) -&gt; Double.compare(</span>
+<span class="fc" id="L250">                        crowding.getOrDefault(b, 0.0),</span>
+<span class="fc" id="L251">                        crowding.getOrDefault(a, 0.0)</span>
+                ));
+<span class="fc" id="L253">                int remaining = populationSize - next.size();</span>
+<span class="fc" id="L254">                next.addAll(front.subList(0, remaining));</span>
+<span class="fc" id="L255">                break;</span>
+            }
+<span class="nc" id="L257">        }</span>
+
+<span class="fc" id="L259">        return next;</span>
+    }
+
+    // Expose comparator logic for tournament selection if you want to build it from here
+    public Comparator&lt;TestSuiteChromosome&gt; nsga2Comparator() {
+<span class="fc" id="L264">        return (a, b) -&gt; {</span>
+<span class="fc" id="L265">            int ra = rank.getOrDefault(a, Integer.MAX_VALUE);</span>
+<span class="fc" id="L266">            int rb = rank.getOrDefault(b, Integer.MAX_VALUE);</span>
+<span class="pc bpc" id="L267" title="1 of 2 branches missed.">            if (ra != rb) return Integer.compare(rb, ra); // higher result =&gt; a better (smaller rank)</span>
+<span class="fc" id="L268">            double ca = crowding.getOrDefault(a, 0.0);</span>
+<span class="fc" id="L269">            double cb = crowding.getOrDefault(b, 0.0);</span>
+<span class="fc" id="L270">            return Double.compare(ca, cb); // higher crowding =&gt; better</span>
+        };
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

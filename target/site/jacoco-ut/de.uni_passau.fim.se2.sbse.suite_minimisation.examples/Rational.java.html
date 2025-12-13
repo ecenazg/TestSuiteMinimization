@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Rational.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Test-Suite-Minimisation</a> &gt; <a href="index.source.html" class="el_package">de.uni_passau.fim.se2.sbse.suite_minimisation.examples</a> &gt; <span class="el_source">Rational.java</span></div><h1>Rational.java</h1><pre class="source lang-java linenums">package de.uni_passau.fim.se2.sbse.suite_minimisation.examples;
+
+/**
+ * A rational number, i.e. fraction.
+ * &lt;p&gt;
+ * For example, the rational number 2/3 is created as &quot;new Rational(2, 3)&quot; In this example, 2 is the
+ * numerator, 3 is the denominator
+ */
+public class Rational {
+
+    private long num;
+    private long denom;
+
+    /**
+     * Construct Rational object from numerator and denominator.
+     *
+     * @param num   the numerator
+     * @param denom the denominator
+     * @throws ArithmeticException if denominator is 0 (division by zero)
+     */
+<span class="nc" id="L21">    public Rational(long num, long denom) {</span>
+<span class="nc bnc" id="L22" title="All 2 branches missed.">        if (denom == 0) {</span>
+<span class="nc" id="L23">            throw new ArithmeticException();</span>
+        }
+<span class="nc" id="L25">        this.num = num;</span>
+<span class="nc" id="L26">        this.denom = denom;</span>
+<span class="nc" id="L27">    }</span>
+
+    /**
+     * Normalize the Rational number so that the negative sign is stored in the numerator, rather
+     * than the denominator.
+     */
+    private void normalize() {
+<span class="nc" id="L34">        long num = this.num;</span>
+<span class="nc" id="L35">        long denom = this.denom;</span>
+
+<span class="nc bnc" id="L37" title="All 2 branches missed.">        if (denom &lt; 0) {</span>
+<span class="nc bnc" id="L38" title="All 2 branches missed.">            if (num &lt; 0) {</span>
+<span class="nc" id="L39">                this.num = -num;</span>
+<span class="nc" id="L40">                this.denom = -denom;</span>
+            } else {
+<span class="nc" id="L42">                this.denom = -denom;</span>
+            }
+        }
+<span class="nc" id="L45">    }</span>
+
+    /**
+     * Reduce numerator and denominator by greatest common denominator.
+     */
+    public void reduce() {
+<span class="nc" id="L51">        this.normalize();</span>
+<span class="nc" id="L52">        long g = gcd(this.num, this.denom);</span>
+<span class="nc" id="L53">        this.num /= g;</span>
+<span class="nc" id="L54">        this.denom /= g;</span>
+<span class="nc" id="L55">    }</span>
+
+    /**
+     * @return the numerator of this Rational object.
+     */
+    public long num() {
+<span class="nc" id="L61">        return this.num;</span>
+    }
+
+    /**
+     * @return denominator of this Rational object.
+     */
+    public long denom() {
+<span class="nc" id="L68">        return this.denom;</span>
+    }
+
+    /**
+     * Addition (changes object in place)
+     *
+     * @param r a Rational number object
+     */
+    public void add(Rational r) {
+<span class="nc" id="L77">        this.num = (this.num * r.denom()) + (r.num() * this.denom);</span>
+<span class="nc" id="L78">        this.denom = this.denom * r.denom();</span>
+<span class="nc" id="L79">        this.normalize();</span>
+<span class="nc" id="L80">    }</span>
+
+    /**
+     * Subtraction
+     *
+     * @param r a Rational number object
+     */
+    public void sub(Rational r) {
+<span class="nc" id="L88">        this.num = (this.num * r.denom()) - (r.num() * this.denom);</span>
+<span class="nc" id="L89">        this.denom = this.denom * r.denom();</span>
+<span class="nc" id="L90">        this.normalize();</span>
+<span class="nc" id="L91">    }</span>
+
+    /**
+     * Multiplication
+     *
+     * @param r a Rational number object
+     */
+    public void mul(Rational r) {
+<span class="nc" id="L99">        this.num = (this.num * r.num());</span>
+<span class="nc" id="L100">        this.denom = (this.denom * r.denom());</span>
+<span class="nc" id="L101">        this.normalize();</span>
+<span class="nc" id="L102">    }</span>
+
+    /**
+     * Division
+     *
+     * @param r a Rational number object
+     */
+    public void div(Rational r) {
+<span class="nc" id="L110">        this.num = (this.num * r.denom());</span>
+<span class="nc" id="L111">        this.denom = (this.denom * r.num());</span>
+<span class="nc" id="L112">        this.normalize();</span>
+<span class="nc" id="L113">    }</span>
+
+    /**
+     * Instance method to test for equivalence with another object (overrides Object's method)
+     *
+     * @param other an object
+     * @return true if the two objects represent the same rational number
+     */
+    public boolean equals(Object other) {
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        if (!(other instanceof Rational)) {</span>
+<span class="nc" id="L123">            return false;</span>
+        }
+<span class="nc" id="L125">        Rational a = (Rational) other;</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">        if ((a.num() * this.denom()) == (this.num() * a.denom())) {</span>
+<span class="nc" id="L127">            return true;</span>
+        } else {
+<span class="nc" id="L129">            return false;</span>
+        }
+    }
+
+    /**
+     * Greatest Common Denominator (GCD)
+     *
+     * @param a first long integer
+     * @param b second long integer
+     * @return greatest common denominator
+     */
+    public long gcd(long a, long b) {
+        long g;
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        if (b == 0) {</span>
+<span class="nc" id="L143">            return a;</span>
+        } else {
+<span class="nc" id="L145">            g = gcd(b, (a % b));</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">			if (g &lt; 0) {</span>
+<span class="nc" id="L147">				return -g;</span>
+			} else {
+<span class="nc" id="L149">				return g;</span>
+			}
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SinglePointCrossover.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Test-Suite-Minimisation</a> &gt; <a href="index.source.html" class="el_package">de.uni_passau.fim.se2.sbse.suite_minimisation.crossover</a> &gt; <span class="el_source">SinglePointCrossover.java</span></div><h1>SinglePointCrossover.java</h1><pre class="source lang-java linenums">package de.uni_passau.fim.se2.sbse.suite_minimisation.crossover;
+
+import de.uni_passau.fim.se2.sbse.suite_minimisation.chromosomes.TestSuiteChromosome;
+import de.uni_passau.fim.se2.sbse.suite_minimisation.utils.Pair;
+import de.uni_passau.fim.se2.sbse.suite_minimisation.utils.Randomness;
+
+/**
+ * Single-point crossover for test suite chromosomes.
+ */
+<span class="fc" id="L10">public class SinglePointCrossover implements Crossover&lt;TestSuiteChromosome&gt; {</span>
+
+    @Override
+    public Pair&lt;TestSuiteChromosome&gt; apply(
+            TestSuiteChromosome parent1,
+            TestSuiteChromosome parent2) {
+
+<span class="fc" id="L17">        boolean[] g1 = parent1.getGenes();</span>
+<span class="fc" id="L18">        boolean[] g2 = parent2.getGenes();</span>
+
+<span class="fc" id="L20">        int length = g1.length;</span>
+<span class="fc" id="L21">        int cut = Randomness.random().nextInt(length);</span>
+
+<span class="fc" id="L23">        boolean[] child1 = new boolean[length];</span>
+<span class="fc" id="L24">        boolean[] child2 = new boolean[length];</span>
+
+<span class="fc bfc" id="L26" title="All 2 branches covered.">        for (int i = 0; i &lt; length; i++) {</span>
+<span class="fc bfc" id="L27" title="All 2 branches covered.">            if (i &lt; cut) {</span>
+<span class="fc" id="L28">                child1[i] = g1[i];</span>
+<span class="fc" id="L29">                child2[i] = g2[i];</span>
+            } else {
+<span class="fc" id="L31">                child1[i] = g2[i];</span>
+<span class="fc" id="L32">                child2[i] = g1[i];</span>
+            }
+        }
+
+<span class="fc" id="L36">        return Pair.of(</span>
+<span class="fc" id="L37">                new TestSuiteChromosome(child1, parent1.getMutation(), parent1.getCrossover()),</span>
+<span class="fc" id="L38">                new TestSuiteChromosome(child2, parent2.getMutation(), parent2.getCrossover())</span>
+        );
+    }
+
+    @Override
+    public String toString() {
+<span class="fc" id="L44">        return &quot;Single-point crossover&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

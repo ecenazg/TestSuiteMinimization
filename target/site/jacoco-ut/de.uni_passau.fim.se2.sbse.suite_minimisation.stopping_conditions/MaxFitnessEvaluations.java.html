@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MaxFitnessEvaluations.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Test-Suite-Minimisation</a> &gt; <a href="index.source.html" class="el_package">de.uni_passau.fim.se2.sbse.suite_minimisation.stopping_conditions</a> &gt; <span class="el_source">MaxFitnessEvaluations.java</span></div><h1>MaxFitnessEvaluations.java</h1><pre class="source lang-java linenums">package de.uni_passau.fim.se2.sbse.suite_minimisation.stopping_conditions;
+
+
+/**
+ * A stopping condition that defines the search budget in terms of the maximum number of fitness
+ * evaluations.
+ * &lt;p&gt;
+ * Whenever an algorithm samples a new solution and computes its fitness, the stopping condition
+ * shall be notified of this. For example, a random search samples just one new solution per
+ * iteration, and would notify this stopping condition just once per iteration. On the other hand,
+ * NSGA-II creates an entire new population per generation and must compute the fitness values for
+ * all chromosomes of the new population. Thus, it would notify this stopping condition &quot;population
+ * size&quot; many times per generation.
+ * &lt;p&gt;
+ * Fitness functions and chromosomes may be implemented in such a way that they cache fitness
+ * values. This has no impact on the notification of this stopping condition. A random search might
+ * sample the same &quot;new&quot; value twice, and would still be notified twice, regardless if the fitness
+ * value of this &quot;new&quot; solution has already been cached or not. Caching can have a positive impact
+ * on the runtime and thus on the {@code MaxTime} stopping condition, though.
+ *
+ * @author Sebastian Schweikl
+ */
+public final class MaxFitnessEvaluations implements StoppingCondition {
+
+    /**
+     * The maximum number of fitness evaluations.
+     */
+    private final int maxFitnessEvaluations;
+
+    /**
+     * The current number of fitness evaluations.
+     */
+    private int fitnessEvaluations;
+
+    /**
+     * Creates a new stopping condition using the given number of fitness evaluations as search
+     * budget.
+     *
+     * @param maxFitnessEvaluations the number of fitness evaluations
+     */
+<span class="fc" id="L41">    public MaxFitnessEvaluations(final int maxFitnessEvaluations) {</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">        if (maxFitnessEvaluations &lt;= 0) {</span>
+<span class="fc" id="L43">            throw new IllegalArgumentException(&quot;fitness evaluations must be positive&quot;);</span>
+        }
+<span class="fc" id="L45">        this.maxFitnessEvaluations = maxFitnessEvaluations;</span>
+<span class="fc" id="L46">        this.fitnessEvaluations = Integer.MAX_VALUE;</span>
+<span class="fc" id="L47">    }</span>
+
+    /**
+     * Creates a new stopping condition using the given number of fitness evaluations as search
+     * budget.
+     *
+     * @param maxFitnessEvaluations the number of fitness evaluations
+     * @return the stopping condition
+     */
+    public static MaxFitnessEvaluations of(final int maxFitnessEvaluations) {
+<span class="fc" id="L57">        return new MaxFitnessEvaluations(maxFitnessEvaluations);</span>
+    }
+
+    @Override
+    public void notifySearchStarted() {
+<span class="fc" id="L62">        fitnessEvaluations = 0;</span>
+<span class="fc" id="L63">    }</span>
+
+    @Override
+    public void notifyFitnessEvaluation() {
+<span class="fc" id="L67">        fitnessEvaluations++;</span>
+<span class="fc" id="L68">    }</span>
+
+    @Override
+    public void notifyFitnessEvaluations(final int evaluations) throws IllegalArgumentException {
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        if (evaluations &lt; 0) {</span>
+<span class="fc" id="L73">            throw new IllegalArgumentException(&quot;Negative number of evaluations: &quot; + evaluations);</span>
+        }
+
+<span class="fc" id="L76">        fitnessEvaluations += evaluations;</span>
+<span class="fc" id="L77">    }</span>
+
+    @Override
+    public boolean searchMustStop() {
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        return !(fitnessEvaluations &lt; maxFitnessEvaluations);</span>
+    }
+
+    @Override
+    public double getProgress() {
+<span class="fc" id="L86">        return fitnessEvaluations / (double) maxFitnessEvaluations;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L91">        return String.format(&quot;%s(%d)&quot;, getClass().getSimpleName(), maxFitnessEvaluations);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

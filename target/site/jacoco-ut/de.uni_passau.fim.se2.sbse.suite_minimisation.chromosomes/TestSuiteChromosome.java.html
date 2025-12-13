@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TestSuiteChromosome.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Test-Suite-Minimisation</a> &gt; <a href="index.source.html" class="el_package">de.uni_passau.fim.se2.sbse.suite_minimisation.chromosomes</a> &gt; <span class="el_source">TestSuiteChromosome.java</span></div><h1>TestSuiteChromosome.java</h1><pre class="source lang-java linenums">package de.uni_passau.fim.se2.sbse.suite_minimisation.chromosomes;
+
+import de.uni_passau.fim.se2.sbse.suite_minimisation.crossover.Crossover;
+import de.uni_passau.fim.se2.sbse.suite_minimisation.mutation.Mutation;
+import de.uni_passau.fim.se2.sbse.suite_minimisation.utils.Randomness;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Objects;
+
+/**
+ * Chromosome representing a reduced test suite using a boolean gene array.
+ *
+ * gene[i] = true  → test i included
+ * gene[i] = false → test i excluded
+ *
+ * The chromosome always represents a valid test suite: at least one test case must be included.
+ */
+public class TestSuiteChromosome extends Chromosome&lt;TestSuiteChromosome&gt; {
+
+    private final boolean[] genes;
+
+    /**
+     * Primary constructor used during evolutionary search.
+     */
+
+    // 1) Main constructor (used by algorithms)
+    public TestSuiteChromosome(
+            boolean[] genes,
+            Mutation&lt;TestSuiteChromosome&gt; mutation,
+            Crossover&lt;TestSuiteChromosome&gt; crossover
+    ) {
+<span class="fc" id="L34">        super(</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">                mutation != null ? mutation : Mutation.identity(),</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">                crossover != null ? crossover : Crossover.identity()</span>
+        );
+<span class="fc" id="L38">        this.genes = Objects.requireNonNull(genes).clone();</span>
+<span class="fc" id="L39">        ensureAtLeastOneTest();</span>
+<span class="fc" id="L40">    }</span>
+
+
+    // 2) Copy constructor
+    public TestSuiteChromosome(TestSuiteChromosome other) {
+<span class="fc" id="L45">        super(other);</span>
+<span class="fc" id="L46">        this.genes = other.genes.clone();</span>
+<span class="fc" id="L47">    }</span>
+
+    // 3) TEST constructor
+    public TestSuiteChromosome(boolean[] genes) {
+<span class="fc" id="L51">        super(); // identity mutation &amp; crossover</span>
+<span class="fc" id="L52">        this.genes = Objects.requireNonNull(genes).clone();</span>
+<span class="fc" id="L53">        ensureAtLeastOneTest();</span>
+<span class="fc" id="L54">    }</span>
+
+    /**
+     * Returns the number of genes = number of tests.
+     */
+    public int length() {
+<span class="fc" id="L60">        return genes.length;</span>
+    }
+
+    /**
+     * Returns the underlying gene array (copy).
+     */
+    public boolean[] getGenes() {
+<span class="fc" id="L67">        return genes.clone();</span>
+    }
+
+    /**
+     * Returns indices of selected tests.
+     */
+    public List&lt;Integer&gt; getSelectedTestIndices() {
+<span class="fc" id="L74">        List&lt;Integer&gt; list = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        for (int i = 0; i &lt; genes.length; i++) {</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">            if (genes[i]) {</span>
+<span class="fc" id="L77">                list.add(i);</span>
+            }
+        }
+<span class="fc" id="L80">        return list;</span>
+    }
+
+    /**
+     * Number of included tests (not normalised).
+     */
+    public int getNumberOfSelectedTests() {
+<span class="fc" id="L87">        int count = 0;</span>
+<span class="fc bfc" id="L88" title="All 4 branches covered.">        for (boolean g : genes) if (g) count++;</span>
+<span class="fc" id="L89">        return count;</span>
+    }
+
+    /**
+     * Ensures the chromosome contains at least one selected test.
+     * If all genes are false, randomly activates one.
+     */
+    private void ensureAtLeastOneTest() {
+<span class="fc" id="L97">        boolean any = false;</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">        for (boolean b : genes) {</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">            if (b) {</span>
+<span class="fc" id="L100">                any = true;</span>
+<span class="fc" id="L101">                break;</span>
+            }
+        }
+        //A chromosome must represent a test suite with at least one test case
+<span class="pc bpc" id="L105" title="1 of 4 branches missed.">        if (!any &amp;&amp; genes.length &gt; 0) {</span>
+<span class="fc" id="L106">            int idx = Randomness.random().nextInt(genes.length);</span>
+<span class="fc" id="L107">            genes[idx] = true;</span>
+        }
+<span class="fc" id="L109">    }</span>
+
+    @Override
+    public TestSuiteChromosome copy() {
+<span class="fc" id="L113">        return new TestSuiteChromosome(this);</span>
+    }
+
+    @Override
+    public boolean equals(Object other) {
+<span class="fc bfc" id="L118" title="All 2 branches covered.">        if (!(other instanceof TestSuiteChromosome o)) return false;</span>
+<span class="fc" id="L119">        return Arrays.equals(this.genes, o.genes);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="fc" id="L124">        return Arrays.hashCode(genes);</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="fc" id="L129">        StringBuilder sb = new StringBuilder(&quot;Chromosome(&quot;);</span>
+<span class="fc bfc" id="L130" title="All 4 branches covered.">        for (boolean g : genes) sb.append(g ? &quot;1&quot; : &quot;0&quot;);</span>
+<span class="fc" id="L131">        sb.append(&quot;)&quot;);</span>
+<span class="fc" id="L132">        return sb.toString();</span>
+    }
+
+    /**
+     * &lt;p&gt;
+     * Returns the runtime type of the implementor (a.k.a. &quot;self-type&quot;). This method must only be
+     * implemented in concrete, non-abstract subclasses by returning a reference to {@code this},
+     * and nothing else. Returning a reference to any other runtime type other than {@code this}
+     * breaks the contract.
+     * &lt;p&gt;
+     * In other words, every concrete subclass {@code Foo} that implements the interface {@code
+     * SelfTyped} must implement this method as follows:
+     * &lt;pre&gt;{@code
+     * public final class Foo implements SelfTyped&lt;Foo&gt; {
+     *     @Override
+     *     public Foo self() {
+     *         return this;
+     *     }
+     * }
+     * }&lt;/pre&gt;
+     *
+     * @return a reference to the self-type
+     */
+    @Override
+    public TestSuiteChromosome self() {
+<span class="fc" id="L157">        return this;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

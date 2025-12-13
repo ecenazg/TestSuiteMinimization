@@ -1,0 +1,188 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > SearchAlgorithm</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">de.uni_passau.fim.se2.sbse.suite_minimisation.algorithms</a>
+</div>
+
+<h1>Coverage Summary for Class: SearchAlgorithm (de.uni_passau.fim.se2.sbse.suite_minimisation.algorithms)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SearchAlgorithm</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package de.uni_passau.fim.se2.sbse.suite_minimisation.algorithms;
+&nbsp;
+&nbsp;
+&nbsp;import de.uni_passau.fim.se2.sbse.suite_minimisation.stopping_conditions.StoppingCondition;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents a strategy to search for an (approximated) solution to a given problem.
+&nbsp; *
+&nbsp; * @param &lt;C&gt; the type of solution encoding for the problem at hand
+&nbsp; */
+&nbsp;public interface SearchAlgorithm&lt;C&gt; {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * &lt;p&gt;
+&nbsp;     * Runs the search algorithm and returns a possible admissible solution of the encoded problem.
+&nbsp;     * &lt;/p&gt;
+&nbsp;     * &lt;p&gt;
+&nbsp;     * Note: every run must perform a new search and must be independent of the previous one. In
+&nbsp;     * particular, it must be possible to call this method multiple times in a row. Implementors
+&nbsp;     * must ensure multiple runs do not interfere each other.
+&nbsp;     * &lt;/p&gt;
+&nbsp;     *
+&nbsp;     * @return a solution
+&nbsp;     */
+&nbsp;    C findSolution();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the stopping condition this algorithm uses.
+&nbsp;     *
+&nbsp;     * @return the stopping condition
+&nbsp;     */
+&nbsp;    StoppingCondition getStoppingCondition();
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Tells whether the search algorithm must stop.
+&nbsp;     *
+&nbsp;     * @return {@code true} if the search must stop, {@code false} otherwise
+&nbsp;     * @implNote an alias for {@code getStoppingCondition().searchMustStop()}
+&nbsp;     */
+&nbsp;    default boolean searchMustStop() {
+<b class="nc">&nbsp;        return getStoppingCondition().searchMustStop();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns how much search budget has already been consumed by the search.
+&nbsp;     *
+&nbsp;     * @return the amount of search budget consumed
+&nbsp;     * @implNote an alias for {@code getStoppingCondition().getProgress()}
+&nbsp;     */
+&nbsp;    default double getProgress() {
+<b class="nc">&nbsp;        return getStoppingCondition().getProgress();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Notifies the stopping condition that the search has started.
+&nbsp;     *
+&nbsp;     * @implNote an alias for {@code getStoppingCondition().notifySearchStarted()}
+&nbsp;     */
+&nbsp;    default void notifySearchStarted() {
+<b class="nc">&nbsp;        getStoppingCondition().notifySearchStarted();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Notifies the stopping condition that a fitness evaluation took place.
+&nbsp;     *
+&nbsp;     * @implNote an alias for {@code getStoppingCondition().notifyFitnessEvaluation()}
+&nbsp;     */
+&nbsp;    default void notifyFitnessEvaluation() {
+<b class="nc">&nbsp;        getStoppingCondition().notifyFitnessEvaluation();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Notifies the stopping condition that a number of fitness evaluations took place.
+&nbsp;     *
+&nbsp;     * @param evaluations the number of evaluations, must not be negative
+&nbsp;     * @throws IllegalArgumentException if the given number of evaluations is negative
+&nbsp;     * @implNote an alias for {@code getStoppingCondition().notifyFitnessEvaluation()}
+&nbsp;     */
+&nbsp;    default void notifyFitnessEvaluation(final int evaluations) throws IllegalArgumentException {
+<b class="nc">&nbsp;        getStoppingCondition().notifyFitnessEvaluations(evaluations);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-12-13 22:10</div>
+</div>
+</body>
+</html>

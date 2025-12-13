@@ -1,0 +1,16 @@
+de/uni_passau/fim/se2/sbse/suite_minimisation/selection/BinaryTournamentSelectionTest$3.class
+de/uni_passau/fim/se2/sbse/suite_minimisation/fitness_functions/StoppingAndFitnessDeepTest.class
+de/uni_passau/fim/se2/sbse/suite_minimisation/selection/BinaryTournamentSelectionTest$DummyChromosome.class
+de/uni_passau/fim/se2/sbse/suite_minimisation/crossover/SinglePointCrossoverTest.class
+de/uni_passau/fim/se2/sbse/suite_minimisation/algorithms/RandomSearchTest.class
+de/uni_passau/fim/se2/sbse/suite_minimisation/fitness_functions/MaxFitnessEvaluationsTest.class
+de/uni_passau/fim/se2/sbse/suite_minimisation/crossover/CrossoverTest.class
+de/uni_passau/fim/se2/sbse/suite_minimisation/chromosomes/TestSuiteChromosomeTest.class
+de/uni_passau/fim/se2/sbse/suite_minimisation/utils/UtilsTest.class
+de/uni_passau/fim/se2/sbse/suite_minimisation/selection/BinaryTournamentSelectionTest.class
+de/uni_passau/fim/se2/sbse/suite_minimisation/utils/PairTest.class
+de/uni_passau/fim/se2/sbse/suite_minimisation/algorithms/NSGA2Test.class
+de/uni_passau/fim/se2/sbse/suite_minimisation/selection/BinaryTournamentSelectionTest$1.class
+de/uni_passau/fim/se2/sbse/suite_minimisation/selection/BinaryTournamentSelectionTest$2.class
+de/uni_passau/fim/se2/sbse/suite_minimisation/chromosomes/TestSuiteChromosomeGeneratorTest.class
+de/uni_passau/fim/se2/sbse/suite_minimisation/utils/AlgorithmBuilderTest.class

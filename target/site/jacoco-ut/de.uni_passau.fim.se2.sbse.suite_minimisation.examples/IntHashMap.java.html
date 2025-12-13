@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IntHashMap.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Test-Suite-Minimisation</a> &gt; <a href="index.source.html" class="el_package">de.uni_passau.fim.se2.sbse.suite_minimisation.examples</a> &gt; <span class="el_source">IntHashMap.java</span></div><h1>IntHashMap.java</h1><pre class="source lang-java linenums">package de.uni_passau.fim.se2.sbse.suite_minimisation.examples;
+
+/**
+ * A hash map that uses primitive ints for the key rather than objects.
+ */
+public class IntHashMap {
+
+    /**
+     * The hash table data.
+     */
+    private Entry table[];
+
+    /**
+     * The total number of entries in the hash table.
+     */
+    private int count;
+
+    /**
+     * The table is rehashed when its size exceeds this threshold.  (The value of this field is
+     * (int)(capacity * loadFactor).)
+     */
+    private int threshold;
+
+    /**
+     * The load factor for the hashtable.
+     */
+    private float loadFactor;
+
+    /**
+     * Constructs a new, empty hashtable with a default capacity and load factor, which is 20 and
+     * 0.75 respectively.
+     */
+    public IntHashMap() {
+<span class="nc" id="L34">        this(20, 0.75f);</span>
+<span class="nc" id="L35">    }</span>
+
+    /**
+     * Constructs a new, empty hashtable with the specified initial capacity and default load
+     * factor, which is 0.75.
+     *
+     * @param initialCapacity the initial capacity of the hashtable.
+     * @throws IllegalArgumentException if the initial capacity is less than zero.
+     */
+    public IntHashMap(int initialCapacity) {
+<span class="nc" id="L45">        this(initialCapacity, 0.75f);</span>
+<span class="nc" id="L46">    }</span>
+
+    /**
+     * Constructs a new, empty hashtable with the specified initial capacity and the specified load
+     * factor.
+     *
+     * @param initialCapacity the initial capacity of the hashtable.
+     * @param loadFactor      the load factor of the hashtable.
+     * @throws IllegalArgumentException if the initial capacity is less than zero, or if the load
+     *                                  factor is nonpositive.
+     */
+    public IntHashMap(int initialCapacity, float loadFactor) {
+<span class="nc" id="L58">        super();</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        if (initialCapacity &lt; 0) {</span>
+<span class="nc" id="L60">            throw new IllegalArgumentException(&quot;Illegal Capacity: &quot; + initialCapacity);</span>
+        }
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        if (loadFactor &lt;= 0) {</span>
+<span class="nc" id="L63">            throw new IllegalArgumentException(&quot;Illegal Load: &quot; + loadFactor);</span>
+        }
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        if (initialCapacity == 0) {</span>
+<span class="nc" id="L66">            initialCapacity = 1;</span>
+        }
+
+<span class="nc" id="L69">        this.loadFactor = loadFactor;</span>
+<span class="nc" id="L70">        table = new Entry[initialCapacity];</span>
+<span class="nc" id="L71">        threshold = (int) (initialCapacity * loadFactor);</span>
+<span class="nc" id="L72">    }</span>
+
+    /**
+     * Returns the number of keys in this hashtable.
+     *
+     * @return the number of keys in this hashtable.
+     */
+    public int size() {
+<span class="nc" id="L80">        return count;</span>
+    }
+
+    /**
+     * Tests if this hashtable maps no keys to values.
+     *
+     * @return true if this hashtable maps no keys to values; false otherwise.
+     */
+    public boolean isEmpty() {
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        return count == 0;</span>
+    }
+
+    /**
+     * Tests if some key maps into the specified value in this hashtable. This operation is more
+     * expensive than the containsKey method.
+     * &lt;p&gt;
+     * Note that this method is identical in functionality to containsValue, (which is part of the
+     * Map interface in the collections framework).
+     *
+     * @param value a value to search for.
+     * @return true if and only if some key maps to the value argument in this hashtable as
+     * determined by the equals method; false otherwise.
+     * @throws NullPointerException if the value is null.
+     * @see #containsKey(int)
+     * @see #containsValue(Object)
+     * @see java.util.Map
+     */
+    public boolean contains(Object value) {
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        if (value == null) {</span>
+<span class="nc" id="L109">            throw new NullPointerException();</span>
+        }
+
+<span class="nc" id="L112">        Entry tab[] = table;</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">        for (int i = tab.length; i-- &gt; 0; ) {</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">            for (Entry e = tab[i]; e != null; e = e.next) {</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">                if (e.value.equals(value)) {</span>
+<span class="nc" id="L116">                    return true;</span>
+                }
+            }
+        }
+<span class="nc" id="L120">        return false;</span>
+    }
+
+    /**
+     * Returns true if this HashMap maps one or more keys to this value.
+     * &lt;p&gt;
+     * Note that this method is identical in functionality to contains (which predates the Map
+     * interface).
+     *
+     * @param value value whose presence in this HashMap is to be tested.
+     * @see java.util.Map
+     * @since JDK1.2
+     */
+    public boolean containsValue(Object value) {
+<span class="nc" id="L134">        return contains(value);</span>
+    }
+
+    /**
+     * Tests if the specified object is a key in this hashtable.
+     *
+     * @param key possible key.
+     * @return true if and only if the specified object is a key in this hashtable, as determined by
+     * the equals method; false otherwise.
+     * @see #contains(Object)
+     */
+    public boolean containsKey(int key) {
+<span class="nc" id="L146">        Entry tab[] = table;</span>
+<span class="nc" id="L147">        int hash = key;</span>
+<span class="nc" id="L148">        int index = (hash &amp; 0x7FFFFFFF) % tab.length;</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">        for (Entry e = tab[index]; e != null; e = e.next) {</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">            if (e.hash == hash) {</span>
+<span class="nc" id="L151">                return true;</span>
+            }
+        }
+<span class="nc" id="L154">        return false;</span>
+    }
+
+    /**
+     * Returns the value to which the specified key is mapped in this map.
+     *
+     * @param key a key in the hashtable.
+     * @return the value to which the key is mapped in this hashtable; null if the key is not mapped
+     * to any value in this hashtable.
+     * @see #put(int, Object)
+     */
+    public Object get(int key) {
+<span class="nc" id="L166">        Entry tab[] = table;</span>
+<span class="nc" id="L167">        int hash = key;</span>
+<span class="nc" id="L168">        int index = (hash &amp; 0x7FFFFFFF) % tab.length;</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">        for (Entry e = tab[index]; e != null; e = e.next) {</span>
+<span class="nc bnc" id="L170" title="All 2 branches missed.">            if (e.hash == hash) {</span>
+<span class="nc" id="L171">                return e.value;</span>
+            }
+        }
+<span class="nc" id="L174">        return null;</span>
+    }
+
+    /**
+     * Increases the capacity of and internally reorganizes this hashtable, in order to accommodate
+     * and access its entries more efficiently.
+     * &lt;p&gt;
+     * This method is called automatically when the number of keys in the hashtable exceeds this
+     * hashtable's capacity and load factor.
+     */
+    protected void rehash() {
+<span class="nc" id="L185">        int oldCapacity = table.length;</span>
+<span class="nc" id="L186">        Entry oldMap[] = table;</span>
+
+<span class="nc" id="L188">        int newCapacity = oldCapacity * 2 + 1;</span>
+<span class="nc" id="L189">        Entry newMap[] = new Entry[newCapacity];</span>
+
+<span class="nc" id="L191">        threshold = (int) (newCapacity * loadFactor);</span>
+<span class="nc" id="L192">        table = newMap;</span>
+
+<span class="nc bnc" id="L194" title="All 2 branches missed.">        for (int i = oldCapacity; i-- &gt; 0; ) {</span>
+<span class="nc bnc" id="L195" title="All 2 branches missed.">            for (Entry old = oldMap[i]; old != null; ) {</span>
+<span class="nc" id="L196">                Entry e = old;</span>
+<span class="nc" id="L197">                old = old.next;</span>
+
+<span class="nc" id="L199">                int index = (e.hash &amp; 0x7FFFFFFF) % newCapacity;</span>
+<span class="nc" id="L200">                e.next = newMap[index];</span>
+<span class="nc" id="L201">                newMap[index] = e;</span>
+<span class="nc" id="L202">            }</span>
+        }
+<span class="nc" id="L204">    }</span>
+
+    /**
+     * Maps the specified key to the specified value in this hashtable. The key cannot be null.
+     * &lt;p&gt;
+     * The value can be retrieved by calling the get method with a key that is equal to the original
+     * key.
+     *
+     * @param key   the hashtable key.
+     * @param value the value.
+     * @return the previous value of the specified key in this hashtable, or null if it did not have
+     * one.
+     * @throws NullPointerException if the key is null.
+     * @see #get(int)
+     */
+    public Object put(int key, Object value) {
+        // Makes sure the key is not already in the hashtable.
+<span class="nc" id="L221">        Entry tab[] = table;</span>
+<span class="nc" id="L222">        int hash = key;</span>
+<span class="nc" id="L223">        int index = (hash &amp; 0x7FFFFFFF) % tab.length;</span>
+<span class="nc bnc" id="L224" title="All 2 branches missed.">        for (Entry e = tab[index]; e != null; e = e.next) {</span>
+<span class="nc bnc" id="L225" title="All 2 branches missed.">            if (e.hash == hash) {</span>
+<span class="nc" id="L226">                Object old = e.value;</span>
+<span class="nc" id="L227">                e.value = value;</span>
+<span class="nc" id="L228">                return old;</span>
+            }
+        }
+
+<span class="nc bnc" id="L232" title="All 2 branches missed.">        if (count &gt;= threshold) {</span>
+            // Rehash the table if the threshold is exceeded
+<span class="nc" id="L234">            rehash();</span>
+
+<span class="nc" id="L236">            tab = table;</span>
+<span class="nc" id="L237">            index = (hash &amp; 0x7FFFFFFF) % tab.length;</span>
+        }
+
+        // Creates the new entry.
+<span class="nc" id="L241">        Entry e = new Entry(hash, key, value, tab[index]);</span>
+<span class="nc" id="L242">        tab[index] = e;</span>
+<span class="nc" id="L243">        count++;</span>
+<span class="nc" id="L244">        return null;</span>
+    }
+
+    /**
+     * Removes the key (and its corresponding value) from this hashtable.
+     * &lt;p&gt;
+     * This method does nothing if the key is not present in the hashtable.
+     *
+     * @param key the key that needs to be removed.
+     * @return the value to which the key had been mapped in this hashtable, or null if the key did
+     * not have a mapping.
+     */
+    public Object remove(int key) {
+<span class="nc" id="L257">        Entry tab[] = table;</span>
+<span class="nc" id="L258">        int hash = key;</span>
+<span class="nc" id="L259">        int index = (hash &amp; 0x7FFFFFFF) % tab.length;</span>
+<span class="nc bnc" id="L260" title="All 2 branches missed.">        for (Entry e = tab[index], prev = null; e != null; prev = e, e = e.next) {</span>
+<span class="nc bnc" id="L261" title="All 2 branches missed.">            if (e.hash == hash) {</span>
+<span class="nc bnc" id="L262" title="All 2 branches missed.">                if (prev != null) {</span>
+<span class="nc" id="L263">                    prev.next = e.next;</span>
+                } else {
+<span class="nc" id="L265">                    tab[index] = e.next;</span>
+                }
+<span class="nc" id="L267">                count--;</span>
+<span class="nc" id="L268">                Object oldValue = e.value;</span>
+<span class="nc" id="L269">                e.value = null;</span>
+<span class="nc" id="L270">                return oldValue;</span>
+            }
+        }
+<span class="nc" id="L273">        return null;</span>
+    }
+
+    /**
+     * Clears this hashtable so that it contains no keys.
+     */
+    public void clear() {
+<span class="nc" id="L280">        Entry tab[] = table;</span>
+<span class="nc bnc" id="L281" title="All 2 branches missed.">        for (int index = tab.length; --index &gt;= 0; ) {</span>
+<span class="nc" id="L282">            tab[index] = null;</span>
+        }
+<span class="nc" id="L284">        count = 0;</span>
+<span class="nc" id="L285">    }</span>
+
+    /**
+     * Innerclass that acts as a datastructure to create a new entry in the table.
+     */
+    private static class Entry {
+
+        int hash;
+        int key;
+        Object value;
+        Entry next;
+
+        /**
+         * Create a new entry with the given values.
+         *
+         * @param hash  The code used to hash the object with
+         * @param key   The key used to enter this in the table
+         * @param value The value for this key
+         * @param next  A reference to the next entry in the table
+         */
+<span class="nc" id="L305">        protected Entry(int hash, int key, Object value, Entry next) {</span>
+<span class="nc" id="L306">            this.hash = hash;</span>
+<span class="nc" id="L307">            this.key = key;</span>
+<span class="nc" id="L308">            this.value = value;</span>
+<span class="nc" id="L309">            this.next = next;</span>
+<span class="nc" id="L310">        }</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

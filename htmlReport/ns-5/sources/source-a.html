@@ -1,0 +1,405 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > LiftTest</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">de.uni_passau.fim.se2.sbse.suite_minimisation.examples</a>
+</div>
+
+<h1>Coverage Summary for Class: LiftTest (de.uni_passau.fim.se2.sbse.suite_minimisation.examples)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">LiftTest</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/34)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/159)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package de.uni_passau.fim.se2.sbse.suite_minimisation.examples;
+&nbsp;
+&nbsp;import org.junit.jupiter.api.Test;
+&nbsp;
+&nbsp;import static org.junit.jupiter.api.Assertions.*;
+&nbsp;
+<b class="nc">&nbsp;public class LiftTest {</b>
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test0() throws Throwable {
+&nbsp;        // test here!
+<b class="nc">&nbsp;        Lift l = new Lift(10);</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test1() throws Throwable {
+&nbsp;        // test here!
+<b class="nc">&nbsp;        Lift l = new Lift(10);</b>
+<b class="nc">&nbsp;        assertFalse(l.isFull());</b>
+<b class="nc">&nbsp;        assertEquals(10, l.getTopFloor());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test2() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(2);</b>
+<b class="nc">&nbsp;        lift.call(1);</b>
+<b class="nc">&nbsp;        assertEquals(1, lift.getCurrentFloor());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test3() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(3, 4);</b>
+<b class="nc">&nbsp;        lift.addRiders(3);</b>
+<b class="nc">&nbsp;        assertEquals(3, lift.getNumRiders());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test4() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(3);</b>
+<b class="nc">&nbsp;        assertEquals(0, lift.getCurrentFloor());</b>
+<b class="nc">&nbsp;        lift.goUp();</b>
+<b class="nc">&nbsp;        lift.goUp();</b>
+<b class="nc">&nbsp;        lift.goUp();</b>
+<b class="nc">&nbsp;        lift.goUp();</b>
+<b class="nc">&nbsp;        assertEquals(3, lift.getCurrentFloor());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test5() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(1, 1);</b>
+<b class="nc">&nbsp;        assertEquals(1, lift.getTopFloor());</b>
+<b class="nc">&nbsp;        assertEquals(1, lift.getCapacity());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test6() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(1);</b>
+<b class="nc">&nbsp;        lift.goUp();</b>
+<b class="nc">&nbsp;        assertEquals(1, lift.getCurrentFloor());</b>
+<b class="nc">&nbsp;        lift.goUp();</b>
+<b class="nc">&nbsp;        assertEquals(1, lift.getCurrentFloor());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test7() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(1, 2);</b>
+<b class="nc">&nbsp;        lift.addRiders(2);</b>
+<b class="nc">&nbsp;        assertEquals(0, lift.getNumRiders());</b>
+<b class="nc">&nbsp;        lift.addRiders(2);</b>
+<b class="nc">&nbsp;        assertEquals(0, lift.getNumRiders());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test8() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(1);</b>
+<b class="nc">&nbsp;        lift.goDown();</b>
+<b class="nc">&nbsp;        lift.goUp();</b>
+<b class="nc">&nbsp;        assertEquals(1, lift.getCurrentFloor());</b>
+<b class="nc">&nbsp;        lift.goDown();</b>
+<b class="nc">&nbsp;        lift.goDown();</b>
+<b class="nc">&nbsp;        assertEquals(0, lift.getCurrentFloor());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test9() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(2);</b>
+<b class="nc">&nbsp;        lift.call(3);</b>
+<b class="nc">&nbsp;        assertEquals(0, lift.getCurrentFloor());</b>
+<b class="nc">&nbsp;        lift.call(2);</b>
+<b class="nc">&nbsp;        assertEquals(2, lift.getCurrentFloor());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test10() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(1);</b>
+<b class="nc">&nbsp;        lift.call(-1);</b>
+<b class="nc">&nbsp;        assertEquals(0, lift.getCurrentFloor());</b>
+<b class="nc">&nbsp;        lift.goUp();</b>
+<b class="nc">&nbsp;        lift.goUp();</b>
+<b class="nc">&nbsp;        lift.call(0);</b>
+<b class="nc">&nbsp;        assertEquals(0, lift.getCurrentFloor());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test11() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(3, 3);</b>
+<b class="nc">&nbsp;        lift.goUp();</b>
+<b class="nc">&nbsp;        lift.call(3);</b>
+<b class="nc">&nbsp;        assertEquals(3, lift.getCurrentFloor());</b>
+<b class="nc">&nbsp;        lift.call(1);</b>
+<b class="nc">&nbsp;        lift.goDown();</b>
+<b class="nc">&nbsp;        assertEquals(0, lift.getCurrentFloor());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test12() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(3, 5);</b>
+<b class="nc">&nbsp;        assertFalse(lift.isFull());</b>
+<b class="nc">&nbsp;        lift.addRiders(5);</b>
+<b class="nc">&nbsp;        assertTrue(lift.isFull());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test13() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(3, 4);</b>
+<b class="nc">&nbsp;        assertEquals(4, lift.getCapacity());</b>
+<b class="nc">&nbsp;        lift.addRiders(3);</b>
+<b class="nc">&nbsp;        assertEquals(4, lift.getCapacity());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test14() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(2);</b>
+<b class="nc">&nbsp;        lift.goUp();</b>
+<b class="nc">&nbsp;        assertEquals(1, lift.getCurrentFloor());</b>
+<b class="nc">&nbsp;        assertEquals(1, lift.getCurrentFloor());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test15() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(4);</b>
+<b class="nc">&nbsp;        lift.goUp();</b>
+<b class="nc">&nbsp;        lift.call(1);</b>
+<b class="nc">&nbsp;        assertEquals(1, lift.getCurrentFloor());</b>
+<b class="nc">&nbsp;        lift.goUp();</b>
+<b class="nc">&nbsp;        lift.call(2);</b>
+<b class="nc">&nbsp;        assertEquals(2, lift.getCurrentFloor());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test16() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(1);</b>
+<b class="nc">&nbsp;        assertEquals(10, lift.getCapacity());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test17() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(11, 12);</b>
+<b class="nc">&nbsp;        lift.call(11);</b>
+<b class="nc">&nbsp;        lift.addRiders(12);</b>
+<b class="nc">&nbsp;        assertEquals(11, lift.getCurrentFloor());</b>
+<b class="nc">&nbsp;        assertEquals(12, lift.getNumRiders());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test18() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(21, 22);</b>
+<b class="nc">&nbsp;        assertEquals(22, lift.getCapacity());</b>
+<b class="nc">&nbsp;        lift.addRiders(23);</b>
+<b class="nc">&nbsp;        assertEquals(22, lift.getNumRiders());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test19() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(21, 22);</b>
+<b class="nc">&nbsp;        assertEquals(21, lift.getTopFloor());</b>
+<b class="nc">&nbsp;        lift.call(21);</b>
+<b class="nc">&nbsp;        lift.goDown();</b>
+<b class="nc">&nbsp;        assertEquals(20, lift.getCurrentFloor());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test20() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(30);</b>
+<b class="nc">&nbsp;        lift.call(20);</b>
+<b class="nc">&nbsp;        lift.goDown();</b>
+<b class="nc">&nbsp;        assertEquals(19, lift.getCurrentFloor());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test21() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(11, 12);</b>
+<b class="nc">&nbsp;        lift.goUp();</b>
+<b class="nc">&nbsp;        lift.call(11);</b>
+<b class="nc">&nbsp;        lift.goUp();</b>
+<b class="nc">&nbsp;        lift.goDown();</b>
+<b class="nc">&nbsp;        lift.goUp();</b>
+<b class="nc">&nbsp;        assertEquals(11, lift.getCurrentFloor());</b>
+<b class="nc">&nbsp;        assertEquals(11, lift.getTopFloor());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test22() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(1);</b>
+<b class="nc">&nbsp;        lift.goDown();</b>
+<b class="nc">&nbsp;        assertEquals(0, lift.getCurrentFloor());</b>
+<b class="nc">&nbsp;        assertEquals(10, lift.getCapacity());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test23() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(11, 12);</b>
+<b class="nc">&nbsp;        lift.addRiders(13);</b>
+<b class="nc">&nbsp;        assertEquals(12, lift.getNumRiders());</b>
+<b class="nc">&nbsp;        assertTrue(lift.isFull());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test24() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(1, 2);</b>
+<b class="nc">&nbsp;        lift.addRiders(1);</b>
+<b class="nc">&nbsp;        assertEquals(1, lift.getNumRiders());</b>
+<b class="nc">&nbsp;        lift.addRiders(1);</b>
+<b class="nc">&nbsp;        lift.addRiders(1);</b>
+<b class="nc">&nbsp;        assertEquals(2, lift.getNumRiders());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test25() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(10);</b>
+<b class="nc">&nbsp;        lift.call(10);</b>
+<b class="nc">&nbsp;        lift.call(0);</b>
+<b class="nc">&nbsp;        lift.call(10);</b>
+<b class="nc">&nbsp;        lift.call(0);</b>
+<b class="nc">&nbsp;        assertEquals(0, lift.getCurrentFloor());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test26() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(11, 12);</b>
+<b class="nc">&nbsp;        lift.call(11);</b>
+<b class="nc">&nbsp;        lift.goUp();</b>
+<b class="nc">&nbsp;        assertEquals(11, lift.getCurrentFloor());</b>
+<b class="nc">&nbsp;        assertEquals(11, lift.getTopFloor());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test27() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(1, 5);</b>
+<b class="nc">&nbsp;        lift.addRiders(6);</b>
+<b class="nc">&nbsp;        assertEquals(5, lift.getNumRiders());</b>
+<b class="nc">&nbsp;        assertEquals(5, lift.getCapacity());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test28() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(5);</b>
+<b class="nc">&nbsp;        assertEquals(10, lift.getCapacity());</b>
+<b class="nc">&nbsp;        assertFalse(lift.isFull());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test29() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(3);</b>
+<b class="nc">&nbsp;        lift.call(3);</b>
+<b class="nc">&nbsp;        assertEquals(3, lift.getCurrentFloor());</b>
+<b class="nc">&nbsp;        lift.goDown();</b>
+<b class="nc">&nbsp;        lift.goDown();</b>
+<b class="nc">&nbsp;        lift.goDown();</b>
+<b class="nc">&nbsp;        lift.goDown();</b>
+<b class="nc">&nbsp;        assertEquals(0, lift.getCurrentFloor());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test30() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(1, 3);</b>
+<b class="nc">&nbsp;        assertEquals(1, lift.getTopFloor());</b>
+<b class="nc">&nbsp;        lift = new Lift(2);</b>
+<b class="nc">&nbsp;        assertEquals(2, lift.getTopFloor());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test31() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(1);</b>
+<b class="nc">&nbsp;        assertEquals(0, lift.getCurrentFloor());</b>
+<b class="nc">&nbsp;        lift = new Lift(1, 1);</b>
+<b class="nc">&nbsp;        assertEquals(0, lift.getCurrentFloor());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    public void test32() throws Throwable {
+<b class="nc">&nbsp;        Lift lift = new Lift(3);</b>
+<b class="nc">&nbsp;        lift.goUp();</b>
+<b class="nc">&nbsp;        assertEquals(1, lift.getCurrentFloor());</b>
+<b class="nc">&nbsp;        lift.goUp();</b>
+<b class="nc">&nbsp;        lift.goUp();</b>
+<b class="nc">&nbsp;        lift.goUp();</b>
+<b class="nc">&nbsp;        assertEquals(3, lift.getCurrentFloor());</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-12-13 22:10</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.fitness_functions,MaximizingFitnessFunction,5,2,0,0,1,1,1,1,1,1
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.fitness_functions,FitnessFunction,12,46,1,7,2,9,3,8,2,5
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.fitness_functions,MinimizingFitnessFunction,0,7,0,0,0,2,0,2,0,2
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.examples,ComplexTest,464,0,4,0,107,0,25,0,23,0
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.examples,AddNumbersTest,39,0,2,0,14,0,9,0,8,0
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.examples,Complex,383,0,4,0,59,0,25,0,23,0
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.examples,LiftTest,617,0,0,0,192,0,34,0,34,0
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.examples,Debug,22,0,2,0,7,0,4,0,3,0
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.examples,IntHashMap.Entry,15,0,0,0,6,0,1,0,1,0
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.examples,SparseIntArray,468,0,38,0,102,0,40,0,21,0
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.examples,AddNumbers,32,0,4,0,13,0,5,0,3,0
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.examples,Rational,199,0,14,0,49,0,18,0,11,0
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.examples,Lift,105,0,16,0,30,0,19,0,11,0
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.examples,IntHashMap,370,0,42,0,89,0,34,0,13,0
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.examples,RationalTest,898,0,4,0,238,0,50,0,48,0
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.examples,Document,299,0,46,0,73,0,38,0,15,0
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.examples,DebugTest,28,0,0,0,9,0,4,0,4,0
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.chromosomes,TestSuiteChromosomeGenerator,0,94,0,4,0,17,0,4,0,2
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.chromosomes,Chromosome,0,56,0,0,0,16,0,7,0,7
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.chromosomes,TestSuiteChromosome,0,207,1,25,0,41,1,25,0,13
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.mutation,BitFlipMutation,2,47,0,6,1,10,1,5,1,2
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.mutation,Mutation.new Mutation() {...},2,6,0,0,1,2,1,2,1,2
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.mutation,Mutation,0,4,0,0,0,1,0,1,0,1
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.crossover,Crossover,0,11,0,0,0,2,0,2,0,2
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.crossover,Crossover.new Crossover() {...},0,11,0,0,0,3,0,3,0,3
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.crossover,SinglePointCrossover,0,77,0,4,0,17,0,5,0,3
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.algorithms,NSGA2,89,814,20,58,9,137,18,36,0,15
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.algorithms,RandomSearch,159,505,44,58,32,100,29,31,1,8
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.algorithms,SearchAlgorithm,9,12,0,0,3,5,2,3,2,3
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.algorithms,SearchAlgorithmType,0,15,0,0,0,3,0,1,0,1
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.utils,CoverageTracker.MemoryClassLoader,36,0,2,0,8,0,4,0,3,0
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.utils,Randomness,0,7,0,0,0,2,0,2,0,2
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.utils,Utils,3,158,2,14,1,30,3,9,1,3
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.utils,AlgorithmBuilder,81,138,8,2,13,27,6,9,2,8
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.utils,Pair.new Iterator() {...},0,37,0,5,0,7,0,6,0,3
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.utils,Pair,26,133,5,5,9,23,7,13,2,13
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.utils,CoverageTracker,559,0,44,0,117,0,47,0,25,0
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation,Main.TestSuiteStats,110,0,10,0,17,0,8,0,3,0
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation,Main.RepetitionStats,91,0,6,0,17,0,7,0,4,0
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation,Main.AlgorithmStats,118,0,2,0,22,0,5,0,4,0
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation,AlgorithmConverter,23,0,3,0,5,0,4,0,2,0
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation,Main,349,0,10,0,73,0,19,0,14,0
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.stopping_conditions,MaxFitnessEvaluations,17,64,0,6,1,17,1,10,1,7
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.stopping_conditions,StoppingCondition,18,0,4,0,5,0,3,0,1,0
+Test-Suite-Minimisation,de.uni_passau.fim.se2.sbse.suite_minimisation.selection,BinaryTournamentSelection,0,67,0,8,0,16,0,6,0,2

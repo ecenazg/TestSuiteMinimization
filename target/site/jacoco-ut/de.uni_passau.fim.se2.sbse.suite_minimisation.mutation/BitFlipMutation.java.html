@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BitFlipMutation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Test-Suite-Minimisation</a> &gt; <a href="index.source.html" class="el_package">de.uni_passau.fim.se2.sbse.suite_minimisation.mutation</a> &gt; <span class="el_source">BitFlipMutation.java</span></div><h1>BitFlipMutation.java</h1><pre class="source lang-java linenums">package de.uni_passau.fim.se2.sbse.suite_minimisation.mutation;
+
+import de.uni_passau.fim.se2.sbse.suite_minimisation.chromosomes.TestSuiteChromosome;
+import de.uni_passau.fim.se2.sbse.suite_minimisation.utils.Randomness;
+
+/**
+ * Bit-flip mutation for test suite chromosomes.
+ *
+ * Each gene is flipped with probability 1 / n, where n is the number of tests.
+ */
+<span class="fc" id="L11">public class BitFlipMutation implements Mutation&lt;TestSuiteChromosome&gt; {</span>
+
+    @Override
+    public TestSuiteChromosome apply(TestSuiteChromosome parent) {
+<span class="fc" id="L15">        TestSuiteChromosome offspring = parent.copy();</span>
+<span class="fc" id="L16">        boolean[] genes = offspring.getGenes();</span>
+
+<span class="fc" id="L18">        double p = 1.0 / genes.length;</span>
+
+<span class="fc bfc" id="L20" title="All 2 branches covered.">        for (int i = 0; i &lt; genes.length; i++) {</span>
+<span class="fc bfc" id="L21" title="All 2 branches covered.">            if (Randomness.random().nextDouble() &lt; p) {</span>
+<span class="fc bfc" id="L22" title="All 2 branches covered.">                genes[i] = !genes[i];</span>
+            }
+        }
+
+<span class="fc" id="L26">        return new TestSuiteChromosome(</span>
+                genes,
+<span class="fc" id="L28">                offspring.getMutation(),</span>
+<span class="fc" id="L29">                offspring.getCrossover()</span>
+        );
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L35">        return &quot;Bit-flip mutation (p = 1/n)&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,12 @@
+/Users/Shared/ws2526sbsesuiteminimisation-guengo01/test/de/uni_passau/fim/se2/sbse/suite_minimisation/algorithms/NSGA2Test.java
+/Users/Shared/ws2526sbsesuiteminimisation-guengo01/test/de/uni_passau/fim/se2/sbse/suite_minimisation/algorithms/RandomSearchTest.java
+/Users/Shared/ws2526sbsesuiteminimisation-guengo01/test/de/uni_passau/fim/se2/sbse/suite_minimisation/chromosomes/TestSuiteChromosomeGeneratorTest.java
+/Users/Shared/ws2526sbsesuiteminimisation-guengo01/test/de/uni_passau/fim/se2/sbse/suite_minimisation/chromosomes/TestSuiteChromosomeTest.java
+/Users/Shared/ws2526sbsesuiteminimisation-guengo01/test/de/uni_passau/fim/se2/sbse/suite_minimisation/crossover/CrossoverTest.java
+/Users/Shared/ws2526sbsesuiteminimisation-guengo01/test/de/uni_passau/fim/se2/sbse/suite_minimisation/crossover/SinglePointCrossoverTest.java
+/Users/Shared/ws2526sbsesuiteminimisation-guengo01/test/de/uni_passau/fim/se2/sbse/suite_minimisation/fitness_functions/MaxFitnessEvaluationsTest.java
+/Users/Shared/ws2526sbsesuiteminimisation-guengo01/test/de/uni_passau/fim/se2/sbse/suite_minimisation/fitness_functions/StoppingAndFitnessDeepTest.java
+/Users/Shared/ws2526sbsesuiteminimisation-guengo01/test/de/uni_passau/fim/se2/sbse/suite_minimisation/selection/BinaryTournamentSelectionTest.java
+/Users/Shared/ws2526sbsesuiteminimisation-guengo01/test/de/uni_passau/fim/se2/sbse/suite_minimisation/utils/AlgorithmBuilderTest.java
+/Users/Shared/ws2526sbsesuiteminimisation-guengo01/test/de/uni_passau/fim/se2/sbse/suite_minimisation/utils/PairTest.java
+/Users/Shared/ws2526sbsesuiteminimisation-guengo01/test/de/uni_passau/fim/se2/sbse/suite_minimisation/utils/UtilsTest.java

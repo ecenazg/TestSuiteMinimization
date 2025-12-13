@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Document.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Test-Suite-Minimisation</a> &gt; <a href="index.source.html" class="el_package">de.uni_passau.fim.se2.sbse.suite_minimisation.examples</a> &gt; <span class="el_source">Document.java</span></div><h1>Document.java</h1><pre class="source lang-java linenums">package de.uni_passau.fim.se2.sbse.suite_minimisation.examples;
+
+
+import de.uni_passau.fim.se2.sbse.suite_minimisation.examples.dependencies.BytesRef;
+import de.uni_passau.fim.se2.sbse.suite_minimisation.examples.dependencies.IndexableField;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
+/**
+ * Documents are the unit of indexing and search.
+ * &lt;p&gt;
+ * A Document is a set of fields.  Each field has a name and a textual value. A field may be stored
+ * with the document, in which case it is returned with search hits on the document.  Thus each
+ * document should typically contain one or more stored fields which uniquely identify it.
+ */
+public final class Document implements Iterable&lt;IndexableField&gt; {
+
+<span class="nc" id="L21">    private final static String[] NO_STRINGS = new String[0];</span>
+<span class="nc" id="L22">    private final List&lt;IndexableField&gt; fields = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Constructs a new document with no fields.
+     */
+<span class="nc" id="L27">    public Document() {</span>
+<span class="nc" id="L28">    }</span>
+
+    @Override
+    public Iterator&lt;IndexableField&gt; iterator() {
+<span class="nc" id="L32">        return fields.iterator();</span>
+    }
+
+    /**
+     * &lt;p&gt;Adds a field to a document.  Several fields may be added with
+     * the same name.  In this case, if the fields are indexed, their text is treated as though
+     * appended for the purposes of search.&lt;/p&gt;
+     * &lt;p&gt; Note that add like the removeField(s) methods only makes sense
+     * prior to adding a document to an index. These methods cannot be used to change the content of
+     * an existing index! In order to achieve this, a document has to be deleted from an index and a
+     * new changed version of that document has to be added.&lt;/p&gt;
+     */
+    public final void add(IndexableField field) {
+<span class="nc" id="L45">        fields.add(field);</span>
+<span class="nc" id="L46">    }</span>
+
+    /**
+     * &lt;p&gt;Removes field with the specified name from the document.
+     * If multiple fields exist with this name, this method removes the first field that has been
+     * added. If there is no field with the specified name, the document remains unchanged.&lt;/p&gt;
+     * &lt;p&gt; Note that the removeField(s) methods like the add method only make sense
+     * prior to adding a document to an index. These methods cannot be used to change the content of
+     * an existing index! In order to achieve this, a document has to be deleted from an index and a
+     * new changed version of that document has to be added.&lt;/p&gt;
+     */
+    public final void removeField(String name) {
+<span class="nc" id="L58">        Iterator&lt;IndexableField&gt; it = fields.iterator();</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        while (it.hasNext()) {</span>
+<span class="nc" id="L60">            IndexableField field = it.next();</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">            if (field.name().equals(name)) {</span>
+<span class="nc" id="L62">                it.remove();</span>
+<span class="nc" id="L63">                return;</span>
+            }
+<span class="nc" id="L65">        }</span>
+<span class="nc" id="L66">    }</span>
+
+    /**
+     * &lt;p&gt;Removes all fields with the given name from the document.
+     * If there is no field with the specified name, the document remains unchanged.&lt;/p&gt;
+     * &lt;p&gt; Note that the removeField(s) methods like the add method only make sense
+     * prior to adding a document to an index. These methods cannot be used to change the content of
+     * an existing index! In order to achieve this, a document has to be deleted from an index and a
+     * new changed version of that document has to be added.&lt;/p&gt;
+     */
+    public final void removeFields(String name) {
+<span class="nc" id="L77">        Iterator&lt;IndexableField&gt; it = fields.iterator();</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        while (it.hasNext()) {</span>
+<span class="nc" id="L79">            IndexableField field = it.next();</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">            if (field.name().equals(name)) {</span>
+<span class="nc" id="L81">                it.remove();</span>
+            }
+<span class="nc" id="L83">        }</span>
+<span class="nc" id="L84">    }</span>
+
+    /**
+     * Returns an array of byte arrays for of the fields that have the name specified as the method
+     * parameter.  This method returns an empty array when there are no matching fields.  It never
+     * returns null.
+     *
+     * @param name the name of the field
+     * @return a &lt;code&gt;BytesRef[]&lt;/code&gt; of binary field values
+     */
+    public final BytesRef[] getBinaryValues(String name) {
+<span class="nc" id="L95">        final List&lt;BytesRef&gt; result = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        for (IndexableField field : fields) {</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">            if (field.name().equals(name)) {</span>
+<span class="nc" id="L98">                final BytesRef bytes = field.binaryValue();</span>
+<span class="nc bnc" id="L99" title="All 2 branches missed.">                if (bytes != null) {</span>
+<span class="nc" id="L100">                    result.add(bytes);</span>
+                }
+            }
+<span class="nc" id="L103">        }</span>
+
+<span class="nc" id="L105">        return result.toArray(new BytesRef[result.size()]);</span>
+    }
+
+    /**
+     * Returns an array of bytes for the first (or only) field that has the name specified as the
+     * method parameter. This method will return &lt;code&gt;null&lt;/code&gt; if no binary fields with the
+     * specified name are available. There may be non-binary fields with the same name.
+     *
+     * @param name the name of the field.
+     * @return a &lt;code&gt;BytesRef&lt;/code&gt; containing the binary field value or &lt;code&gt;null&lt;/code&gt;
+     */
+    public final BytesRef getBinaryValue(String name) {
+<span class="nc bnc" id="L117" title="All 2 branches missed.">        for (IndexableField field : fields) {</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">            if (field.name().equals(name)) {</span>
+<span class="nc" id="L119">                final BytesRef bytes = field.binaryValue();</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">                if (bytes != null) {</span>
+<span class="nc" id="L121">                    return bytes;</span>
+                }
+            }
+<span class="nc" id="L124">        }</span>
+<span class="nc" id="L125">        return null;</span>
+    }
+
+    /**
+     * Returns a field with the given name if any exist in this document, or null.  If multiple
+     * fields exists with this name, this method returns the first value added.
+     */
+    public final IndexableField getField(String name) {
+<span class="nc bnc" id="L133" title="All 2 branches missed.">        for (IndexableField field : fields) {</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">            if (field.name().equals(name)) {</span>
+<span class="nc" id="L135">                return field;</span>
+            }
+<span class="nc" id="L137">        }</span>
+<span class="nc" id="L138">        return null;</span>
+    }
+
+    /**
+     * Returns an array of {@link IndexableField}s with the given name. This method returns an empty
+     * array when there are no matching fields.  It never returns null.
+     *
+     * @param name the name of the field
+     * @return a &lt;code&gt;Field[]&lt;/code&gt; array
+     */
+    public IndexableField[] getFields(String name) {
+<span class="nc" id="L149">        List&lt;IndexableField&gt; result = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        for (IndexableField field : fields) {</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">            if (field.name().equals(name)) {</span>
+<span class="nc" id="L152">                result.add(field);</span>
+            }
+<span class="nc" id="L154">        }</span>
+
+<span class="nc" id="L156">        return result.toArray(new IndexableField[result.size()]);</span>
+    }
+
+    /**
+     * Returns a List of all the fields in a document.
+     *
+     * @return an immutable &lt;code&gt;List&amp;lt;Field&amp;gt;&lt;/code&gt;
+     */
+    public final List&lt;IndexableField&gt; getFields() {
+<span class="nc" id="L165">        return Collections.unmodifiableList(fields);</span>
+    }
+
+    /**
+     * Returns an array of values of the field specified as the method parameter. This method
+     * returns an empty array when there are no matching fields.  It never returns null.
+     *
+     * @param name the name of the field
+     * @return a &lt;code&gt;String[]&lt;/code&gt; of field values
+     */
+    public final String[] getValues(String name) {
+<span class="nc" id="L176">        List&lt;String&gt; result = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L177" title="All 2 branches missed.">        for (IndexableField field : fields) {</span>
+<span class="nc bnc" id="L178" title="All 4 branches missed.">            if (field.name().equals(name) &amp;&amp; field.stringValue() != null) {</span>
+<span class="nc" id="L179">                result.add(field.stringValue());</span>
+            }
+<span class="nc" id="L181">        }</span>
+
+<span class="nc bnc" id="L183" title="All 2 branches missed.">        if (result.size() == 0) {</span>
+<span class="nc" id="L184">            return NO_STRINGS;</span>
+        }
+
+<span class="nc" id="L187">        return result.toArray(new String[result.size()]);</span>
+    }
+
+    /**
+     * Returns the string value of the field with the given name if any exist in this document, or
+     * null.  If multiple fields exist with this name, this method returns the first value added. If
+     * only binary fields with this name exist, returns null.
+     */
+    public final String get(String name) {
+<span class="nc bnc" id="L196" title="All 2 branches missed.">        for (IndexableField field : fields) {</span>
+<span class="nc bnc" id="L197" title="All 4 branches missed.">            if (field.name().equals(name) &amp;&amp; field.stringValue() != null) {</span>
+<span class="nc" id="L198">                return field.stringValue();</span>
+            }
+<span class="nc" id="L200">        }</span>
+<span class="nc" id="L201">        return null;</span>
+    }
+
+    /**
+     * Prints the fields of a document for human consumption.
+     */
+    @Override
+    public final String toString() {
+<span class="nc" id="L209">        StringBuilder buffer = new StringBuilder();</span>
+<span class="nc" id="L210">        buffer.append(&quot;Document&lt;&quot;);</span>
+<span class="nc bnc" id="L211" title="All 2 branches missed.">        for (int i = 0; i &lt; fields.size(); i++) {</span>
+<span class="nc" id="L212">            IndexableField field = fields.get(i);</span>
+<span class="nc" id="L213">            buffer.append(field.toString());</span>
+<span class="nc bnc" id="L214" title="All 2 branches missed.">            if (i != fields.size() - 1) {</span>
+<span class="nc" id="L215">                buffer.append(&quot; &quot;);</span>
+            }
+        }
+<span class="nc" id="L218">        buffer.append(&quot;&gt;&quot;);</span>
+<span class="nc" id="L219">        return buffer.toString();</span>
+    }
+
+    /**
+     * Removes all the fields from document.
+     */
+    public void clear() {
+<span class="nc" id="L226">        fields.clear();</span>
+<span class="nc" id="L227">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

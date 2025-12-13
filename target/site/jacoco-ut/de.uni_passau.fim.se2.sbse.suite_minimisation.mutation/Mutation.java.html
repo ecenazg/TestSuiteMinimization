@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Mutation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Test-Suite-Minimisation</a> &gt; <a href="index.source.html" class="el_package">de.uni_passau.fim.se2.sbse.suite_minimisation.mutation</a> &gt; <span class="el_source">Mutation.java</span></div><h1>Mutation.java</h1><pre class="source lang-java linenums">package de.uni_passau.fim.se2.sbse.suite_minimisation.mutation;
+
+import de.uni_passau.fim.se2.sbse.suite_minimisation.chromosomes.Chromosome;
+
+import java.util.function.UnaryOperator;
+
+/**
+ * Mutation introduces new genetic material in offspring by modifying a parent chromosome.
+ *
+ * @param &lt;C&gt; the type of chromosomes supported by this mutation operator
+ * @author Sebastian Schweikl
+ * @apiNote Usually, it is desired that the offspring of two chromosomes of type {@code C} is again
+ * of the same type {@code C}. This requirement can be enforced at compile time by specifying a
+ * recursive type parameter, here: {@code C extends Chromosome&lt;C&gt;}.
+ */
+@FunctionalInterface
+public interface Mutation&lt;C extends Chromosome&lt;C&gt;&gt; extends UnaryOperator&lt;C&gt; {
+
+    /**
+     * A mutation operator that always returns the parent chromosome as offspring.
+     *
+     * @param &lt;C&gt; the type of chromosome
+     * @return a mutation operator that always returns the parent as offspring
+     * @apiNote Can be useful for creating dummy chromosomes when writing unit tests.
+     */
+    static &lt;C extends Chromosome&lt;C&gt;&gt; Mutation&lt;C&gt; identity() {
+<span class="fc" id="L27">        return new Mutation&lt;&gt;() {</span>
+            @Override
+            public C apply(final C c) {
+<span class="fc" id="L30">                return c.copy();</span>
+            }
+
+            @Override
+            public String toString() {
+<span class="nc" id="L35">                return &quot;Identity mutation&quot;;</span>
+            }
+        };
+    }
+
+    /**
+     * Applies mutation to the given chromosome {@code c} and returns the resulting offspring.
+     * Usually, it is desirable that the parent chromosome not be modified in-place. Instead, it is
+     * advisable to create a copy of the parent, mutate the copy and return it as offspring. While
+     * this is not an absolute requirement implementations that do not conform to this should
+     * clearly indicate this fact.
+     *
+     * @param c the parent chromosome to mutate
+     * @return the offspring formed by mutating the parent
+     */
+    @Override
+    C apply(final C c);
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

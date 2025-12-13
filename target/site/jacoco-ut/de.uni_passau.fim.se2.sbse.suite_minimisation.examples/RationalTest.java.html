@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RationalTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Test-Suite-Minimisation</a> &gt; <a href="index.source.html" class="el_package">de.uni_passau.fim.se2.sbse.suite_minimisation.examples</a> &gt; <span class="el_source">RationalTest.java</span></div><h1>RationalTest.java</h1><pre class="source lang-java linenums">package de.uni_passau.fim.se2.sbse.suite_minimisation.examples;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+<span class="nc" id="L7">public class RationalTest {</span>
+
+    @Test
+    public void test0() throws Throwable {
+        try {
+<span class="nc" id="L12">            Rational r = new Rational(42, 0);</span>
+<span class="nc" id="L13">            fail(&quot;&quot;);</span>
+<span class="nc" id="L14">        } catch (ArithmeticException e) {</span>
+<span class="nc" id="L15">            assertEquals(&quot;&quot;, e.getMessage());</span>
+<span class="nc" id="L16">        }</span>
+<span class="nc" id="L17">    }</span>
+
+    @Test
+    public void test1() throws Throwable {
+        try {
+<span class="nc" id="L22">            new Rational(0, 0);</span>
+<span class="nc" id="L23">            fail(&quot;...&quot;);</span>
+<span class="nc" id="L24">        } catch (ArithmeticException e) {</span>
+            // ok
+<span class="nc" id="L26">        }</span>
+
+<span class="nc" id="L28">    }</span>
+
+    @Test
+    public void test2() throws Throwable {
+<span class="nc" id="L32">        Rational rational = new Rational(7, 8);</span>
+<span class="nc" id="L33">        assertEquals(7, rational.num());</span>
+<span class="nc" id="L34">        assertEquals(8, rational.denom());</span>
+<span class="nc" id="L35">    }</span>
+
+    @Test
+    public void test3() throws Throwable {
+        try {
+<span class="nc" id="L40">            Rational rational = new Rational(1, 0);</span>
+<span class="nc" id="L41">            fail(&quot;Expected exception did not occur.&quot;);</span>
+<span class="nc" id="L42">        } catch (ArithmeticException e) {</span>
+<span class="nc" id="L43">        }</span>
+<span class="nc" id="L44">    }</span>
+
+    @Test
+    public void test4() throws Throwable {
+<span class="nc" id="L48">        Rational rational = new Rational(-1, -2);</span>
+<span class="nc" id="L49">        rational.reduce();</span>
+<span class="nc" id="L50">        assertEquals(1, rational.num());</span>
+<span class="nc" id="L51">        assertEquals(2, rational.denom());</span>
+<span class="nc" id="L52">    }</span>
+
+    @Test
+    public void test5() throws Throwable {
+<span class="nc" id="L56">        Rational rat = new Rational(1, -2);</span>
+<span class="nc" id="L57">        Rational rat2 = new Rational(-1, 2);</span>
+<span class="nc" id="L58">        rat.mul(rat2);</span>
+<span class="nc" id="L59">        assertEquals(rat.num(), 1);</span>
+<span class="nc" id="L60">        assertEquals(rat.denom(), 4);</span>
+<span class="nc" id="L61">    }</span>
+
+    @Test
+    public void test6() throws Throwable {
+<span class="nc" id="L65">        Rational rat = new Rational(15, 40);</span>
+<span class="nc" id="L66">        rat.reduce();</span>
+<span class="nc" id="L67">        assertEquals(rat.num(), 3);</span>
+<span class="nc" id="L68">        assertEquals(rat.denom(), 8);</span>
+<span class="nc" id="L69">    }</span>
+
+    @Test
+    public void test7() throws Throwable {
+<span class="nc" id="L73">        Rational rat = new Rational(12, 40);</span>
+<span class="nc" id="L74">        Rational rat2 = new Rational(8, 40);</span>
+<span class="nc" id="L75">        rat.add(rat2);</span>
+<span class="nc" id="L76">        assertEquals(rat.num(), 20);</span>
+<span class="nc" id="L77">        assertEquals(rat.denom(), 40);</span>
+<span class="nc" id="L78">    }</span>
+
+    @Test
+    public void test8() throws Throwable {
+<span class="nc" id="L82">        Rational rat = new Rational(12, 40);</span>
+<span class="nc" id="L83">        Rational rat2 = new Rational(8, -65);</span>
+<span class="nc" id="L84">        rat.add(rat2);</span>
+<span class="nc" id="L85">        assertEquals(rat.num(), (12 * -65) + (8 * 40));</span>
+<span class="nc" id="L86">        assertEquals(rat.denom(), 40 * -65);</span>
+<span class="nc" id="L87">    }</span>
+
+    @Test
+    public void test9() throws Throwable {
+<span class="nc" id="L91">        Rational rat = new Rational(10, 40);</span>
+<span class="nc" id="L92">        Rational rat2 = new Rational(20, 40);</span>
+<span class="nc" id="L93">        rat.add(rat2);</span>
+<span class="nc" id="L94">        rat.reduce();</span>
+<span class="nc" id="L95">        assertEquals(3, rat.num());</span>
+<span class="nc" id="L96">        assertEquals(4, rat.denom());</span>
+<span class="nc" id="L97">    }</span>
+
+    @Test
+    public void test10() throws Throwable {
+<span class="nc" id="L101">        Rational rat = new Rational(0, 1);</span>
+<span class="nc" id="L102">        Rational rat2 = new Rational(-4, 1);</span>
+<span class="nc" id="L103">        rat2.sub(rat);</span>
+<span class="nc" id="L104">        assertEquals(-4, rat2.num());</span>
+<span class="nc" id="L105">        assertEquals(1, rat2.denom());</span>
+<span class="nc" id="L106">    }</span>
+
+    @Test
+    public void test11() throws Throwable {
+<span class="nc" id="L110">        Rational rat = new Rational(-2, 0);</span>
+<span class="nc" id="L111">        rat.reduce();</span>
+<span class="nc" id="L112">        Rational correct = new Rational(1, 0);</span>
+<span class="nc" id="L113">        assertEquals(correct, rat);</span>
+<span class="nc" id="L114">    }</span>
+
+    @Test
+    public void test12() throws Throwable {
+<span class="nc" id="L118">        Rational rat = new Rational(4, -5);</span>
+<span class="nc" id="L119">        Rational sub = new Rational(8, -5);</span>
+<span class="nc" id="L120">        rat.sub(sub);</span>
+<span class="nc" id="L121">        assertEquals(1, rat.num());</span>
+<span class="nc" id="L122">        assertEquals(1, rat.denom());</span>
+<span class="nc" id="L123">    }</span>
+
+    @Test
+    public void test13() throws Throwable {
+        // test here!
+<span class="nc" id="L128">        Rational rational = new Rational(-2, -2);</span>
+<span class="nc" id="L129">        Rational rationalMultiplier = new Rational(1, 1);</span>
+<span class="nc" id="L130">        rational.mul(rationalMultiplier);</span>
+<span class="nc" id="L131">        assertEquals(rational.num(), 2);</span>
+<span class="nc" id="L132">        assertEquals(rational.denom(), 2);</span>
+<span class="nc" id="L133">    }</span>
+
+    @Test
+    public void test14() throws Throwable {
+<span class="nc" id="L137">        Rational rat = new Rational(2, 3);</span>
+<span class="nc" id="L138">        Rational ratOther = new Rational(3, 2);</span>
+<span class="nc" id="L139">        assertTrue(rat.equals(ratOther));</span>
+<span class="nc" id="L140">        assertEquals(rat.num(), 2);</span>
+<span class="nc" id="L141">        assertEquals(ratOther.num(), 3);</span>
+<span class="nc" id="L142">        assertEquals(rat.denom(), 3);</span>
+<span class="nc" id="L143">        assertEquals(ratOther.denom(), 2);</span>
+
+
+<span class="nc" id="L146">    }</span>
+
+    @Test
+    public void test15() throws Throwable {
+<span class="nc" id="L150">        Rational rat = new Rational(1, 0);</span>
+<span class="nc" id="L151">        assertEquals(rat.num(), 1);</span>
+<span class="nc" id="L152">        assertEquals(rat.denom(), 0);</span>
+<span class="nc" id="L153">    }</span>
+
+    @Test
+    public void test16() throws Throwable {
+<span class="nc" id="L157">        Rational rational = new Rational(-1, -1);</span>
+<span class="nc" id="L158">        long x = rational.num() / rational.gcd(rational.num(), rational.denom());</span>
+<span class="nc" id="L159">        rational.reduce();</span>
+<span class="nc" id="L160">        assertEquals(x, rational.num());</span>
+<span class="nc" id="L161">    }</span>
+
+    @Test
+    public void test17() throws Throwable {
+<span class="nc" id="L165">        Rational rational = new Rational(1, 2);</span>
+<span class="nc" id="L166">        Rational sub = new Rational(1, 1);</span>
+<span class="nc" id="L167">        rational.sub(sub);</span>
+<span class="nc" id="L168">        assertEquals(-1, rational.num());</span>
+<span class="nc" id="L169">    }</span>
+
+    @Test
+    public void test18() throws Throwable {
+<span class="nc" id="L173">        Rational rational = new Rational(2, 2);</span>
+<span class="nc" id="L174">        long num = 2;</span>
+<span class="nc" id="L175">        rational.reduce();</span>
+<span class="nc" id="L176">        assertEquals(1, rational.num());</span>
+<span class="nc" id="L177">    }</span>
+
+    @Test
+    public void test19() throws Throwable {
+<span class="nc" id="L181">        Rational rational = new Rational(2, 2);</span>
+<span class="nc" id="L182">        Rational add = new Rational(1, 1);</span>
+<span class="nc" id="L183">        rational.add(add);</span>
+<span class="nc" id="L184">        long num = 4;</span>
+<span class="nc" id="L185">        assertEquals(4, rational.num());</span>
+<span class="nc" id="L186">    }</span>
+
+    @Test
+    public void test20() throws Throwable {
+
+<span class="nc" id="L191">        Rational rational = new Rational(0, 1);</span>
+<span class="nc" id="L192">        assertEquals(1, rational.denom());</span>
+<span class="nc" id="L193">    }</span>
+
+    @Test
+    public void test21() throws Throwable {
+<span class="nc" id="L197">        Rational rational = new Rational(2, 2);</span>
+<span class="nc" id="L198">        Rational rational2 = new Rational(1, -2);</span>
+<span class="nc" id="L199">        rational.add(rational2);</span>
+<span class="nc" id="L200">        assertEquals(-1, rational.num());</span>
+<span class="nc" id="L201">        assertEquals(2, rational.num());</span>
+<span class="nc" id="L202">    }</span>
+
+    @Test
+    public void test22() throws Throwable {
+<span class="nc" id="L206">        Rational rational = new Rational(-5, 35);</span>
+<span class="nc" id="L207">        Rational rational2 = new Rational(5, 20);</span>
+<span class="nc" id="L208">        rational.sub(rational2);</span>
+<span class="nc" id="L209">        assertEquals(-1, rational.num());</span>
+<span class="nc" id="L210">        assertEquals(7, rational.denom());</span>
+<span class="nc" id="L211">    }</span>
+
+    @Test
+    public void test23() throws Throwable {
+<span class="nc" id="L215">        Rational rational = new Rational(-5, 35);</span>
+<span class="nc" id="L216">        Rational rational2 = new Rational(5, 20);</span>
+<span class="nc" id="L217">        rational.sub(rational2);</span>
+<span class="nc" id="L218">        assertEquals(rational, rational2);</span>
+<span class="nc" id="L219">    }</span>
+
+    @Test
+    public void test24() throws Throwable {
+<span class="nc" id="L223">        Rational rational = new Rational(-5, 35);</span>
+<span class="nc" id="L224">        Rational rational2 = new Rational(-5, 35);</span>
+<span class="nc" id="L225">        boolean test = rational.equals(rational2);</span>
+<span class="nc" id="L226">        assertTrue(test);</span>
+<span class="nc" id="L227">    }</span>
+
+    @Test
+    public void test25() throws Throwable {
+<span class="nc" id="L231">        Rational rational = new Rational(-5, -35);</span>
+<span class="nc" id="L232">        Rational rational2 = new Rational(-5, 35);</span>
+<span class="nc" id="L233">        boolean test = rational.equals(rational2);</span>
+<span class="nc" id="L234">        assertFalse(test);</span>
+<span class="nc" id="L235">    }</span>
+
+    @Test
+    public void test26() throws Throwable {
+        try {
+<span class="nc" id="L240">            Rational rational = new Rational(-5, 0);</span>
+<span class="nc" id="L241">        } catch (ArithmeticException e) {</span>
+<span class="nc" id="L242">            assertTrue(true);</span>
+<span class="nc" id="L243">        }</span>
+<span class="nc" id="L244">    }</span>
+
+    @Test
+    public void test27() throws Throwable {
+<span class="nc" id="L248">        Rational rational = new Rational(-5, -35);</span>
+<span class="nc" id="L249">        Rational rational2 = new Rational(1, 1);</span>
+<span class="nc" id="L250">        rational.div(rational2);</span>
+<span class="nc" id="L251">        assertEquals(5, rational.num());</span>
+<span class="nc" id="L252">        assertEquals(35, rational.denom());</span>
+<span class="nc" id="L253">    }</span>
+
+    @Test
+    public void test28() throws Throwable {
+<span class="nc" id="L257">        Rational rational = new Rational(-5, -35);</span>
+<span class="nc" id="L258">        Rational rational2 = new Rational(2, 35);</span>
+<span class="nc" id="L259">        rational.add(rational2);</span>
+<span class="nc" id="L260">        assertEquals(5, rational.num());</span>
+<span class="nc" id="L261">        assertEquals(35, rational.denom());</span>
+<span class="nc" id="L262">    }</span>
+
+    @Test
+    public void test29() throws Throwable {
+<span class="nc" id="L266">        Rational rational = new Rational(2, 4);</span>
+<span class="nc" id="L267">        assertEquals(2, rational.num());</span>
+<span class="nc" id="L268">    }</span>
+
+    @Test
+    public void test30() throws Throwable {
+<span class="nc" id="L272">        Rational rational = new Rational(2, 4);</span>
+<span class="nc" id="L273">        Rational rational2 = new Rational(4, 8);</span>
+<span class="nc" id="L274">        assertTrue(rational.equals(rational2));</span>
+<span class="nc" id="L275">    }</span>
+
+    @Test
+    public void test31() throws Throwable {
+<span class="nc" id="L279">        Rational rational = new Rational(2, 4);</span>
+<span class="nc" id="L280">        assertEquals(2, rational.gcd(4, 8));</span>
+<span class="nc" id="L281">    }</span>
+
+    @Test
+    public void test32() throws Throwable {
+        // test here!
+<span class="nc" id="L286">        Rational rat = new Rational(2, 2);</span>
+<span class="nc" id="L287">    }</span>
+
+    @Test
+    public void test33() throws Throwable {
+        // test here!
+<span class="nc" id="L292">        Rational rat = new Rational(2, 2);</span>
+<span class="nc" id="L293">        assertEquals(2, rat.gcd(2, 2));</span>
+
+<span class="nc" id="L295">    }</span>
+
+    @Test
+    public void test34() throws Throwable {
+        // test here!
+<span class="nc" id="L300">        Rational r = new Rational(2, 1);</span>
+<span class="nc" id="L301">        r.reduce();</span>
+<span class="nc" id="L302">        assertEquals(2, r.num());</span>
+<span class="nc" id="L303">        assertEquals(1, r.denom());</span>
+<span class="nc" id="L304">    }</span>
+
+    @Test
+    public void test35() throws Throwable {
+<span class="nc" id="L308">        Rational a = new Rational(1, 1);</span>
+<span class="nc" id="L309">        a.reduce();</span>
+<span class="nc" id="L310">        assertEquals(-1, a.num());</span>
+<span class="nc" id="L311">    }</span>
+
+    @Test
+    public void test36() throws Throwable {
+<span class="nc" id="L315">        Rational a = new Rational(1, 2);</span>
+<span class="nc" id="L316">        assertEquals(2, a.denom());</span>
+<span class="nc" id="L317">    }</span>
+
+    @Test
+    public void test37() throws Throwable {
+<span class="nc" id="L321">        Rational a = new Rational(2, 1);</span>
+<span class="nc" id="L322">        assertEquals(2, a.num());</span>
+<span class="nc" id="L323">    }</span>
+
+    @Test
+    public void test38() throws Throwable {
+<span class="nc" id="L327">        Rational a = new Rational(-2, -1);</span>
+<span class="nc" id="L328">        assertEquals(2, a.num());</span>
+<span class="nc" id="L329">        assertEquals(1, a.denom());</span>
+<span class="nc" id="L330">    }</span>
+
+    @Test
+    public void test39() throws Throwable {
+<span class="nc" id="L334">        Rational a = new Rational(-2, -1);</span>
+<span class="nc" id="L335">        a.reduce();</span>
+<span class="nc" id="L336">        assertEquals(2, a.num());</span>
+<span class="nc" id="L337">        assertEquals(1, a.denom());</span>
+<span class="nc" id="L338">    }</span>
+
+    @Test
+    public void test40() throws Throwable {
+<span class="nc" id="L342">        Rational a = new Rational(4, 2);</span>
+<span class="nc" id="L343">        Rational b = new Rational(1, 0);</span>
+<span class="nc" id="L344">        long toTest = a.gcd(4, 2);</span>
+<span class="nc" id="L345">        long toTest2 = a.gcd(1, 0);</span>
+<span class="nc" id="L346">        assertEquals(1, toTest2);</span>
+<span class="nc" id="L347">        assertEquals(2, toTest);</span>
+<span class="nc" id="L348">    }</span>
+
+    @Test
+    public void test41() throws Throwable {
+<span class="nc" id="L352">        Rational a = new Rational(4, 2);</span>
+<span class="nc" id="L353">        long toTest = a.gcd(4, 2);</span>
+<span class="nc" id="L354">        long toTest2 = a.gcd(1, 0);</span>
+<span class="nc" id="L355">        assertEquals(1, toTest2);</span>
+<span class="nc" id="L356">        assertEquals(2, toTest);</span>
+<span class="nc" id="L357">    }</span>
+
+    @Test
+    public void test42() throws Throwable {
+<span class="nc" id="L361">        Rational r1 = new Rational(2, 2);</span>
+<span class="nc" id="L362">        Rational r2 = new Rational(-1, 2);</span>
+<span class="nc" id="L363">        Rational expected = new Rational(1, 2);</span>
+<span class="nc" id="L364">        long gcd = r2.gcd(1, -2);</span>
+
+<span class="nc" id="L366">        r1.add(r2);</span>
+
+<span class="nc" id="L368">        assertEquals(r1, expected);</span>
+<span class="nc" id="L369">        assertEquals(gcd, 1);</span>
+<span class="nc" id="L370">    }</span>
+
+    @Test
+    public void test43() throws Throwable {
+<span class="nc" id="L374">        Rational a = new Rational(2, 3);</span>
+<span class="nc" id="L375">        Rational b = new Rational(5, 6);</span>
+<span class="nc" id="L376">        a.add(b);</span>
+<span class="nc bnc" id="L377" title="All 2 branches missed.">        assertTrue(a.num() == 2);</span>
+<span class="nc bnc" id="L378" title="All 2 branches missed.">        assertTrue(a.denom() == 3);</span>
+<span class="nc" id="L379">    }</span>
+
+    @Test
+    public void test44() throws Throwable {
+<span class="nc" id="L383">        Rational a = new Rational(2, 3);</span>
+<span class="nc" id="L384">        Rational b = new Rational(5, 6);</span>
+<span class="nc" id="L385">        a.add(b);</span>
+<span class="nc" id="L386">        assertEquals(2, a.num());</span>
+<span class="nc" id="L387">        assertEquals(3, a.denom());</span>
+<span class="nc" id="L388">    }</span>
+
+    @Test
+    public void test45() throws Throwable {
+<span class="nc" id="L392">        Rational a = new Rational(2, 3);</span>
+<span class="nc" id="L393">        Rational b = new Rational(5, 6);</span>
+<span class="nc" id="L394">        a.add(b);</span>
+<span class="nc" id="L395">        assertEquals(2, a.num());</span>
+
+<span class="nc" id="L397">    }</span>
+
+    @Test
+    public void test46() throws Throwable {
+<span class="nc" id="L401">        Rational a = new Rational(1, 0);</span>
+<span class="nc" id="L402">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

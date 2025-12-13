@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Complex.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Test-Suite-Minimisation</a> &gt; <a href="index.source.html" class="el_package">de.uni_passau.fim.se2.sbse.suite_minimisation.examples</a> &gt; <span class="el_source">Complex.java</span></div><h1>Complex.java</h1><pre class="source lang-java linenums">package de.uni_passau.fim.se2.sbse.suite_minimisation.examples; /**
+ * Complex.java Class for describing and manipulating complex numbers.
+ */
+
+/**
+ * The &lt;code&gt;Complex&lt;/code&gt; class provides functionality for the complex number system where
+ * &lt;i&gt;i&lt;/i&gt; is not ignored. An object of type
+ * &lt;code&gt;Complex&lt;/code&gt; contains two fields whose type is &lt;code&gt;double&lt;/code&gt;.
+ * &lt;p&gt;
+ * By necessity, this class provides methods for addition, subtraction, multiplication, division,
+ * exponential, and other trigonometric and logarithmic functions.
+ */
+
+public class Complex {
+
+    public double real, imag;
+
+    /**
+     * Constructor that defines the &lt;code&gt;real&lt;/code&gt; and
+     * &lt;code&gt;imaginary&lt;/code&gt; parts of the number.
+     *
+     * @param real The real part of the number.
+     * @param imag The imaginary part of the number.
+     */
+<span class="nc" id="L25">    public Complex(double real, double imag) {</span>
+<span class="nc" id="L26">        this.real = real;</span>
+<span class="nc" id="L27">        this.imag = imag;</span>
+<span class="nc" id="L28">    }</span>
+
+    /**
+     * This method returns the passed double only specified to a certain number of digits.
+     *
+     * @param d      The number to trim.
+     * @param digits The numbers of decimal places to return.
+     * @return The number trimed to &lt;code&gt;digits&lt;/code&gt; decimal places.
+     */
+    public static double trim(double d, int digits) {
+<span class="nc" id="L38">        double scalar = Math.pow(10, digits);</span>
+<span class="nc" id="L39">        return ((int) (d * scalar)) / scalar;</span>
+    }
+
+    /**
+     * Computes &lt;code&gt;this&lt;/code&gt;^&lt;code&gt;power&lt;/code&gt;.
+     *
+     * @param power The exponential power.
+     * @return &lt;code&gt;this&lt;/code&gt;^&lt;code&gt;power&lt;/code&gt;.
+     */
+    public Complex pow(double power) {
+<span class="nc" id="L49">        double r = abs();</span>
+<span class="nc" id="L50">        double theta = angle();</span>
+
+<span class="nc" id="L52">        return new Complex(Math.pow(r, power) * Math.cos(power * theta),</span>
+<span class="nc" id="L53">                Math.pow(r, power) * Math.sin(power * theta));</span>
+    }
+
+    /**
+     * Computes &lt;code&gt;this&lt;/code&gt;^&lt;code&gt;p&lt;/code&gt;.
+     *
+     * @param p The exponential power.
+     * @return &lt;code&gt;this&lt;/code&gt;^&lt;code&gt;p&lt;/code&gt;.
+     */
+    public Complex pow(Complex p) {
+<span class="nc" id="L63">        double a = real, b = imag, c = p.real, d = p.imag;</span>
+<span class="nc" id="L64">        double ns = a * a + b * b;</span>
+<span class="nc" id="L65">        double dArg = d / 2;</span>
+<span class="nc" id="L66">        double cArg = c * arg();</span>
+<span class="nc" id="L67">        double dDenom = Math.pow(Math.E, d * arg());</span>
+
+<span class="nc" id="L69">        double newReal =</span>
+<span class="nc" id="L70">                Math.pow(ns, c / 2) / dDenom * (Math.cos(dArg) * Math.cos(cArg) * Math.log(ns)</span>
+<span class="nc" id="L71">                        - Math.sin(dArg) * Math.sin(cArg) * Math.log(ns));</span>
+<span class="nc" id="L72">        double newImag =</span>
+<span class="nc" id="L73">                Math.pow(ns, c / 2) / dDenom * (Math.cos(dArg) * Math.sin(cArg) * Math.log(ns)</span>
+<span class="nc" id="L74">                        + Math.sin(dArg) * Math.cos(cArg) * Math.log(ns));</span>
+<span class="nc" id="L75">        return new Complex(newReal, newImag);</span>
+    }
+
+    /**
+     * Computes &lt;code&gt;this&lt;/code&gt;+&lt;code&gt;c&lt;/code&gt;.
+     *
+     * @param c The addend to be added to &lt;code&gt;this&lt;/code&gt;.
+     * @return &lt;code&gt;this&lt;/code&gt;+&lt;code&gt;c&lt;/code&gt;.
+     */
+    public Complex add(Complex c) {
+<span class="nc" id="L85">        return new Complex(real + c.real, imag + c.imag);</span>
+    }
+
+    /**
+     * Computes &lt;code&gt;this&lt;/code&gt;*&lt;code&gt;c&lt;/code&gt;.
+     *
+     * @param c The multiplicand to be multiplied with &lt;code&gt;this&lt;/code&gt;.
+     * @return &lt;code&gt;this&lt;/code&gt;*&lt;code&gt;c&lt;/code&gt;.
+     */
+    public Complex multiply(Complex c) {
+<span class="nc" id="L95">        double real = 0.0, imag = 0.0;</span>
+
+<span class="nc" id="L97">        real += this.real * c.real;</span>
+<span class="nc" id="L98">        real -= this.imag * c.imag;</span>
+<span class="nc" id="L99">        imag += this.real * c.imag;</span>
+<span class="nc" id="L100">        imag += this.imag * c.real;</span>
+<span class="nc" id="L101">        return new Complex(real, imag);</span>
+    }
+
+    /**
+     * Computes &lt;code&gt;this&lt;/code&gt;*&lt;code&gt;d&lt;/code&gt;.
+     *
+     * @param d The multiplicand to be multiplied with &lt;code&gt;this&lt;/code&gt;.
+     * @return &lt;code&gt;this&lt;/code&gt;*&lt;code&gt;d&lt;/code&gt;.
+     */
+    public Complex multiply(double d) {
+<span class="nc" id="L111">        return new Complex(real * d, imag * d);</span>
+    }
+
+    /**
+     * Determines if this number is purely complex, it has a real part of zero.
+     *
+     * @return false if &lt;code&gt;this.real == 0.0&lt;/code&gt;, true otherwise
+     */
+    public boolean isPure() {
+<span class="nc bnc" id="L120" title="All 2 branches missed.">        if (real != 0.0) {</span>
+<span class="nc" id="L121">            return false;</span>
+        }
+<span class="nc" id="L123">        return true;</span>
+    }
+
+    /**
+     * Computes the absolute value of &lt;code&gt;this&lt;/code&gt;.
+     * &lt;code&gt;Complex c&lt;/code&gt; = a + ib&lt;br&gt;
+     * sqrt(a^2 + b^2)
+     *
+     * @return sqrt(a ^ 2 + b ^ 2).
+     */
+    public double abs() {
+<span class="nc" id="L134">        return Math.sqrt(real * real + imag * imag);</span>
+    }
+
+    /**
+     * Refer to abs()
+     */
+    public double mod() {
+<span class="nc" id="L141">        return abs();</span>
+    }
+
+    /**
+     * Refer to abs()
+     */
+    public double norm() {
+<span class="nc" id="L148">        return abs();</span>
+    }
+
+    /**
+     * Computes &lt;code&gt;this&lt;/code&gt;-&lt;code&gt;c&lt;/code&gt;.
+     *
+     * @param c The subtrahend to be subtracted from &lt;code&gt;this&lt;/code&gt;.
+     * @return &lt;code&gt;this&lt;/code&gt;-&lt;code&gt;c&lt;/code&gt;.
+     */
+    public Complex subtract(Complex c) {
+<span class="nc" id="L158">        return new Complex(real - c.real, imag - c.imag);</span>
+    }
+
+    /**
+     * Computes the negative of this number.
+     *
+     * @return -&lt;code&gt;this&lt;/code&gt;
+     */
+    public Complex negate() {
+<span class="nc" id="L167">        return new Complex(-real, -imag);</span>
+    }
+
+    /**
+     * Computes the conjugate of this number.
+     *
+     * @return (real, - imag)
+     */
+    public Complex conjugate() {
+<span class="nc" id="L176">        return new Complex(real, -imag);</span>
+    }
+
+    /**
+     * Computes &lt;code&gt;this&lt;/code&gt;/&lt;code&gt;c&lt;/code&gt;.
+     *
+     * @param c The divisor of &lt;code&gt;this&lt;/code&gt;.
+     * @return &lt;code&gt;this&lt;/code&gt;/&lt;code&gt;c&lt;/code&gt;.
+     */
+    public Complex divide(Complex c) {
+<span class="nc" id="L186">        Complex result = multiply(c.conjugate());</span>
+<span class="nc" id="L187">        double divisor = Math.pow(c.abs(), 2);</span>
+<span class="nc" id="L188">        return new Complex(result.real / divisor, result.imag / divisor);</span>
+    }
+
+    /**
+     * Computes &lt;code&gt;this&lt;/code&gt;/&lt;code&gt;d&lt;/code&gt;.
+     *
+     * @param d The divisor of &lt;code&gt;this&lt;/code&gt;.
+     * @return &lt;code&gt;this&lt;/code&gt;/&lt;code&gt;d&lt;/code&gt;.
+     */
+    public Complex divide(double d) {
+<span class="nc" id="L198">        return multiply(1.0 / d);</span>
+    }
+
+    /**
+     * Computes the inverse of &lt;code&gt;this&lt;/code&gt;.
+     *
+     * @return &lt;code&gt;this&lt;/code&gt;^-1.
+     */
+    public Complex inverse() {
+<span class="nc" id="L207">        return new Complex(1.0, 0.0).divide(this);</span>
+    }
+
+    /**
+     * Computes the principal angle of this number.
+     *
+     * @return The polar coordinate angle of this number in radians.
+     */
+    public double angle() {
+<span class="nc" id="L216">        return Math.atan2(imag, real);</span>
+    }
+
+    /**
+     * Refer to angle()
+     */
+    public double arg() {
+<span class="nc" id="L223">        return angle();</span>
+    }
+
+    /**
+     * Refer to angle()
+     */
+    public double phase() {
+<span class="nc" id="L230">        return angle();</span>
+    }
+
+    /**
+     * Computes the principal branch of the logarithm of this complex.
+     *
+     * @return The principal log of &lt;code&gt;this&lt;/code&gt;
+     */
+    public Complex log() {
+<span class="nc" id="L239">        return new Complex(Math.log(mod()), arg());</span>
+    }
+
+    /**
+     * Returns a string representation of this object.
+     */
+    public String toString() {
+<span class="nc" id="L246">        return toString(8);</span>
+    }
+
+    /**
+     * Returns a string representation of this object with double truncation.
+     *
+     * @param doubleLength The number of decimal places to return
+     */
+    public String toString(int doubleLength) {
+<span class="nc" id="L255">        StringBuffer temp = new StringBuffer();</span>
+<span class="nc" id="L256">        temp.append(trim(real, doubleLength));</span>
+<span class="nc bnc" id="L257" title="All 2 branches missed.">        if (imag &lt; 0.0) {</span>
+<span class="nc" id="L258">            temp.append(&quot; - &quot;);</span>
+<span class="nc" id="L259">            temp.append(trim(-imag, doubleLength));</span>
+<span class="nc" id="L260">            temp.append(&quot; i&quot;);</span>
+        } else {
+<span class="nc" id="L262">            temp.append(&quot; + &quot;);</span>
+<span class="nc" id="L263">            temp.append(trim(imag, doubleLength));</span>
+<span class="nc" id="L264">            temp.append(&quot; i&quot;);</span>
+        }
+<span class="nc" id="L266">        return temp.toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

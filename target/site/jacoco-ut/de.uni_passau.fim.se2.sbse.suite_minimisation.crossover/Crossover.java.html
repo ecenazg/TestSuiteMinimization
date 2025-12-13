@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Crossover.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Test-Suite-Minimisation</a> &gt; <a href="index.source.html" class="el_package">de.uni_passau.fim.se2.sbse.suite_minimisation.crossover</a> &gt; <span class="el_source">Crossover.java</span></div><h1>Crossover.java</h1><pre class="source lang-java linenums">package de.uni_passau.fim.se2.sbse.suite_minimisation.crossover;
+
+import de.uni_passau.fim.se2.sbse.suite_minimisation.chromosomes.Chromosome;
+import de.uni_passau.fim.se2.sbse.suite_minimisation.utils.Pair;
+
+import java.util.Objects;
+import java.util.function.BiFunction;
+
+/**
+ * The crossover operator recombines the genetic material of two parent chromosomes
+ * and produces two new chromosomes (offspring) as a result.
+ *
+ * @param &lt;C&gt; the type of chromosomes supported by this crossover operator
+ * @author Sebastian Schweikl
+ * @apiNote Usually, it is desired that the offspring of two chromosomes of type {@code C} is again
+ * of the same type {@code C}. This requirement can be enforced at compile time by specifying a
+ * recursive type parameter, here: {@code C extends Chromosome&lt;C&gt;}.
+ */
+@FunctionalInterface
+public interface Crossover&lt;C extends Chromosome&lt;C&gt;&gt; extends BiFunction&lt;C, C, Pair&lt;C&gt;&gt; {
+
+    /**
+     * A crossover operator that returns the two given parent chromosomes as offspring without
+     * actually modifying them.
+     *
+     * @param &lt;C&gt; the type of chromosomes
+     * @return a crossover operator that returns the parents as offspring
+     * @apiNote Can be useful for creating dummy chromosomes when writing unit tests.
+     */
+    static &lt;C extends Chromosome&lt;C&gt;&gt; Crossover&lt;C&gt; identity() {
+<span class="fc" id="L31">        return new Crossover&lt;&gt;() {</span>
+            @Override
+            public Pair&lt;C&gt; apply(final C c, final C d) {
+<span class="fc" id="L34">                return Pair.of(c, d).map(C::copy);</span>
+            }
+
+            @Override
+            public String toString() {
+<span class="fc" id="L39">                return &quot;Identity crossover&quot;;</span>
+            }
+        };
+    }
+
+    /**
+     * Applies this crossover operator to the two given non-null parent chromosomes {@code parent1}
+     * and {@code parent2}, and returns the resulting pair of offspring chromosomes.
+     * &lt;p&gt;
+     * Note: an offspring can equal one of its parents in terms of {@link Chromosome#equals
+     * equals()}. While not an absolute requirement, it is generally advisable parents and offspring
+     * be different in terms of reference equality ({@code offspring != parent}) as it tends to
+     * simplify the implementation of some search algorithms.
+     *
+     * @param parent1 a parent
+     * @param parent2 another parent
+     * @return the offspring formed by applying crossover to the two parents
+     * @throws NullPointerException if an argument is {@code null}
+     */
+    @Override
+    Pair&lt;C&gt; apply(final C parent1, final C parent2);
+
+    /**
+     * Applies crossover to the given pair of parent chromosomes and returns the resulting pair of
+     * offspring chromosomes.
+     *
+     * @param parents the parent chromosomes
+     * @return the offspring formed by applying crossover to the two parents
+     * @throws NullPointerException if an argument is {@code null}
+     * @apiNote This method is equivalent to {@link #apply(C, C)} but instead of taking the
+     * parents as individual arguments it receives them as pair.
+     */
+    default Pair&lt;C&gt; apply(final Pair&lt;? extends C&gt; parents) {
+<span class="fc" id="L72">        return Objects.requireNonNull(parents).reduce(this);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

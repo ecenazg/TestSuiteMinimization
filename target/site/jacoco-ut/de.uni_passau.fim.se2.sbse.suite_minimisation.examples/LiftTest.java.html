@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LiftTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Test-Suite-Minimisation</a> &gt; <a href="index.source.html" class="el_package">de.uni_passau.fim.se2.sbse.suite_minimisation.examples</a> &gt; <span class="el_source">LiftTest.java</span></div><h1>LiftTest.java</h1><pre class="source lang-java linenums">package de.uni_passau.fim.se2.sbse.suite_minimisation.examples;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+<span class="nc" id="L7">public class LiftTest {</span>
+
+    @Test
+    public void test0() throws Throwable {
+        // test here!
+<span class="nc" id="L12">        Lift l = new Lift(10);</span>
+
+<span class="nc" id="L14">    }</span>
+
+    @Test
+    public void test1() throws Throwable {
+        // test here!
+<span class="nc" id="L19">        Lift l = new Lift(10);</span>
+<span class="nc" id="L20">        assertFalse(l.isFull());</span>
+<span class="nc" id="L21">        assertEquals(10, l.getTopFloor());</span>
+<span class="nc" id="L22">    }</span>
+
+    @Test
+    public void test2() throws Throwable {
+<span class="nc" id="L26">        Lift lift = new Lift(2);</span>
+<span class="nc" id="L27">        lift.call(1);</span>
+<span class="nc" id="L28">        assertEquals(1, lift.getCurrentFloor());</span>
+<span class="nc" id="L29">    }</span>
+
+    @Test
+    public void test3() throws Throwable {
+<span class="nc" id="L33">        Lift lift = new Lift(3, 4);</span>
+<span class="nc" id="L34">        lift.addRiders(3);</span>
+<span class="nc" id="L35">        assertEquals(3, lift.getNumRiders());</span>
+<span class="nc" id="L36">    }</span>
+
+    @Test
+    public void test4() throws Throwable {
+<span class="nc" id="L40">        Lift lift = new Lift(3);</span>
+<span class="nc" id="L41">        assertEquals(0, lift.getCurrentFloor());</span>
+<span class="nc" id="L42">        lift.goUp();</span>
+<span class="nc" id="L43">        lift.goUp();</span>
+<span class="nc" id="L44">        lift.goUp();</span>
+<span class="nc" id="L45">        lift.goUp();</span>
+<span class="nc" id="L46">        assertEquals(3, lift.getCurrentFloor());</span>
+<span class="nc" id="L47">    }</span>
+
+    @Test
+    public void test5() throws Throwable {
+<span class="nc" id="L51">        Lift lift = new Lift(1, 1);</span>
+<span class="nc" id="L52">        assertEquals(1, lift.getTopFloor());</span>
+<span class="nc" id="L53">        assertEquals(1, lift.getCapacity());</span>
+<span class="nc" id="L54">    }</span>
+
+    @Test
+    public void test6() throws Throwable {
+<span class="nc" id="L58">        Lift lift = new Lift(1);</span>
+<span class="nc" id="L59">        lift.goUp();</span>
+<span class="nc" id="L60">        assertEquals(1, lift.getCurrentFloor());</span>
+<span class="nc" id="L61">        lift.goUp();</span>
+<span class="nc" id="L62">        assertEquals(1, lift.getCurrentFloor());</span>
+<span class="nc" id="L63">    }</span>
+
+    @Test
+    public void test7() throws Throwable {
+<span class="nc" id="L67">        Lift lift = new Lift(1, 2);</span>
+<span class="nc" id="L68">        lift.addRiders(2);</span>
+<span class="nc" id="L69">        assertEquals(0, lift.getNumRiders());</span>
+<span class="nc" id="L70">        lift.addRiders(2);</span>
+<span class="nc" id="L71">        assertEquals(0, lift.getNumRiders());</span>
+<span class="nc" id="L72">    }</span>
+
+    @Test
+    public void test8() throws Throwable {
+<span class="nc" id="L76">        Lift lift = new Lift(1);</span>
+<span class="nc" id="L77">        lift.goDown();</span>
+<span class="nc" id="L78">        lift.goUp();</span>
+<span class="nc" id="L79">        assertEquals(1, lift.getCurrentFloor());</span>
+<span class="nc" id="L80">        lift.goDown();</span>
+<span class="nc" id="L81">        lift.goDown();</span>
+<span class="nc" id="L82">        assertEquals(0, lift.getCurrentFloor());</span>
+<span class="nc" id="L83">    }</span>
+
+    @Test
+    public void test9() throws Throwable {
+<span class="nc" id="L87">        Lift lift = new Lift(2);</span>
+<span class="nc" id="L88">        lift.call(3);</span>
+<span class="nc" id="L89">        assertEquals(0, lift.getCurrentFloor());</span>
+<span class="nc" id="L90">        lift.call(2);</span>
+<span class="nc" id="L91">        assertEquals(2, lift.getCurrentFloor());</span>
+<span class="nc" id="L92">    }</span>
+
+    @Test
+    public void test10() throws Throwable {
+<span class="nc" id="L96">        Lift lift = new Lift(1);</span>
+<span class="nc" id="L97">        lift.call(-1);</span>
+<span class="nc" id="L98">        assertEquals(0, lift.getCurrentFloor());</span>
+<span class="nc" id="L99">        lift.goUp();</span>
+<span class="nc" id="L100">        lift.goUp();</span>
+<span class="nc" id="L101">        lift.call(0);</span>
+<span class="nc" id="L102">        assertEquals(0, lift.getCurrentFloor());</span>
+<span class="nc" id="L103">    }</span>
+
+    @Test
+    public void test11() throws Throwable {
+<span class="nc" id="L107">        Lift lift = new Lift(3, 3);</span>
+<span class="nc" id="L108">        lift.goUp();</span>
+<span class="nc" id="L109">        lift.call(3);</span>
+<span class="nc" id="L110">        assertEquals(3, lift.getCurrentFloor());</span>
+<span class="nc" id="L111">        lift.call(1);</span>
+<span class="nc" id="L112">        lift.goDown();</span>
+<span class="nc" id="L113">        assertEquals(0, lift.getCurrentFloor());</span>
+<span class="nc" id="L114">    }</span>
+
+    @Test
+    public void test12() throws Throwable {
+<span class="nc" id="L118">        Lift lift = new Lift(3, 5);</span>
+<span class="nc" id="L119">        assertFalse(lift.isFull());</span>
+<span class="nc" id="L120">        lift.addRiders(5);</span>
+<span class="nc" id="L121">        assertTrue(lift.isFull());</span>
+<span class="nc" id="L122">    }</span>
+
+    @Test
+    public void test13() throws Throwable {
+<span class="nc" id="L126">        Lift lift = new Lift(3, 4);</span>
+<span class="nc" id="L127">        assertEquals(4, lift.getCapacity());</span>
+<span class="nc" id="L128">        lift.addRiders(3);</span>
+<span class="nc" id="L129">        assertEquals(4, lift.getCapacity());</span>
+<span class="nc" id="L130">    }</span>
+
+    @Test
+    public void test14() throws Throwable {
+<span class="nc" id="L134">        Lift lift = new Lift(2);</span>
+<span class="nc" id="L135">        lift.goUp();</span>
+<span class="nc" id="L136">        assertEquals(1, lift.getCurrentFloor());</span>
+<span class="nc" id="L137">        assertEquals(1, lift.getCurrentFloor());</span>
+<span class="nc" id="L138">    }</span>
+
+    @Test
+    public void test15() throws Throwable {
+<span class="nc" id="L142">        Lift lift = new Lift(4);</span>
+<span class="nc" id="L143">        lift.goUp();</span>
+<span class="nc" id="L144">        lift.call(1);</span>
+<span class="nc" id="L145">        assertEquals(1, lift.getCurrentFloor());</span>
+<span class="nc" id="L146">        lift.goUp();</span>
+<span class="nc" id="L147">        lift.call(2);</span>
+<span class="nc" id="L148">        assertEquals(2, lift.getCurrentFloor());</span>
+<span class="nc" id="L149">    }</span>
+
+    @Test
+    public void test16() throws Throwable {
+<span class="nc" id="L153">        Lift lift = new Lift(1);</span>
+<span class="nc" id="L154">        assertEquals(10, lift.getCapacity());</span>
+<span class="nc" id="L155">    }</span>
+
+    @Test
+    public void test17() throws Throwable {
+<span class="nc" id="L159">        Lift lift = new Lift(11, 12);</span>
+<span class="nc" id="L160">        lift.call(11);</span>
+<span class="nc" id="L161">        lift.addRiders(12);</span>
+<span class="nc" id="L162">        assertEquals(11, lift.getCurrentFloor());</span>
+<span class="nc" id="L163">        assertEquals(12, lift.getNumRiders());</span>
+<span class="nc" id="L164">    }</span>
+
+    @Test
+    public void test18() throws Throwable {
+<span class="nc" id="L168">        Lift lift = new Lift(21, 22);</span>
+<span class="nc" id="L169">        assertEquals(22, lift.getCapacity());</span>
+<span class="nc" id="L170">        lift.addRiders(23);</span>
+<span class="nc" id="L171">        assertEquals(22, lift.getNumRiders());</span>
+<span class="nc" id="L172">    }</span>
+
+    @Test
+    public void test19() throws Throwable {
+<span class="nc" id="L176">        Lift lift = new Lift(21, 22);</span>
+<span class="nc" id="L177">        assertEquals(21, lift.getTopFloor());</span>
+<span class="nc" id="L178">        lift.call(21);</span>
+<span class="nc" id="L179">        lift.goDown();</span>
+<span class="nc" id="L180">        assertEquals(20, lift.getCurrentFloor());</span>
+<span class="nc" id="L181">    }</span>
+
+    @Test
+    public void test20() throws Throwable {
+<span class="nc" id="L185">        Lift lift = new Lift(30);</span>
+<span class="nc" id="L186">        lift.call(20);</span>
+<span class="nc" id="L187">        lift.goDown();</span>
+<span class="nc" id="L188">        assertEquals(19, lift.getCurrentFloor());</span>
+<span class="nc" id="L189">    }</span>
+
+    @Test
+    public void test21() throws Throwable {
+<span class="nc" id="L193">        Lift lift = new Lift(11, 12);</span>
+<span class="nc" id="L194">        lift.goUp();</span>
+<span class="nc" id="L195">        lift.call(11);</span>
+<span class="nc" id="L196">        lift.goUp();</span>
+<span class="nc" id="L197">        lift.goDown();</span>
+<span class="nc" id="L198">        lift.goUp();</span>
+<span class="nc" id="L199">        assertEquals(11, lift.getCurrentFloor());</span>
+<span class="nc" id="L200">        assertEquals(11, lift.getTopFloor());</span>
+<span class="nc" id="L201">    }</span>
+
+    @Test
+    public void test22() throws Throwable {
+<span class="nc" id="L205">        Lift lift = new Lift(1);</span>
+<span class="nc" id="L206">        lift.goDown();</span>
+<span class="nc" id="L207">        assertEquals(0, lift.getCurrentFloor());</span>
+<span class="nc" id="L208">        assertEquals(10, lift.getCapacity());</span>
+<span class="nc" id="L209">    }</span>
+
+    @Test
+    public void test23() throws Throwable {
+<span class="nc" id="L213">        Lift lift = new Lift(11, 12);</span>
+<span class="nc" id="L214">        lift.addRiders(13);</span>
+<span class="nc" id="L215">        assertEquals(12, lift.getNumRiders());</span>
+<span class="nc" id="L216">        assertTrue(lift.isFull());</span>
+<span class="nc" id="L217">    }</span>
+
+    @Test
+    public void test24() throws Throwable {
+<span class="nc" id="L221">        Lift lift = new Lift(1, 2);</span>
+<span class="nc" id="L222">        lift.addRiders(1);</span>
+<span class="nc" id="L223">        assertEquals(1, lift.getNumRiders());</span>
+<span class="nc" id="L224">        lift.addRiders(1);</span>
+<span class="nc" id="L225">        lift.addRiders(1);</span>
+<span class="nc" id="L226">        assertEquals(2, lift.getNumRiders());</span>
+<span class="nc" id="L227">    }</span>
+
+    @Test
+    public void test25() throws Throwable {
+<span class="nc" id="L231">        Lift lift = new Lift(10);</span>
+<span class="nc" id="L232">        lift.call(10);</span>
+<span class="nc" id="L233">        lift.call(0);</span>
+<span class="nc" id="L234">        lift.call(10);</span>
+<span class="nc" id="L235">        lift.call(0);</span>
+<span class="nc" id="L236">        assertEquals(0, lift.getCurrentFloor());</span>
+<span class="nc" id="L237">    }</span>
+
+    @Test
+    public void test26() throws Throwable {
+<span class="nc" id="L241">        Lift lift = new Lift(11, 12);</span>
+<span class="nc" id="L242">        lift.call(11);</span>
+<span class="nc" id="L243">        lift.goUp();</span>
+<span class="nc" id="L244">        assertEquals(11, lift.getCurrentFloor());</span>
+<span class="nc" id="L245">        assertEquals(11, lift.getTopFloor());</span>
+<span class="nc" id="L246">    }</span>
+
+    @Test
+    public void test27() throws Throwable {
+<span class="nc" id="L250">        Lift lift = new Lift(1, 5);</span>
+<span class="nc" id="L251">        lift.addRiders(6);</span>
+<span class="nc" id="L252">        assertEquals(5, lift.getNumRiders());</span>
+<span class="nc" id="L253">        assertEquals(5, lift.getCapacity());</span>
+<span class="nc" id="L254">    }</span>
+
+    @Test
+    public void test28() throws Throwable {
+<span class="nc" id="L258">        Lift lift = new Lift(5);</span>
+<span class="nc" id="L259">        assertEquals(10, lift.getCapacity());</span>
+<span class="nc" id="L260">        assertFalse(lift.isFull());</span>
+<span class="nc" id="L261">    }</span>
+
+    @Test
+    public void test29() throws Throwable {
+<span class="nc" id="L265">        Lift lift = new Lift(3);</span>
+<span class="nc" id="L266">        lift.call(3);</span>
+<span class="nc" id="L267">        assertEquals(3, lift.getCurrentFloor());</span>
+<span class="nc" id="L268">        lift.goDown();</span>
+<span class="nc" id="L269">        lift.goDown();</span>
+<span class="nc" id="L270">        lift.goDown();</span>
+<span class="nc" id="L271">        lift.goDown();</span>
+<span class="nc" id="L272">        assertEquals(0, lift.getCurrentFloor());</span>
+<span class="nc" id="L273">    }</span>
+
+    @Test
+    public void test30() throws Throwable {
+<span class="nc" id="L277">        Lift lift = new Lift(1, 3);</span>
+<span class="nc" id="L278">        assertEquals(1, lift.getTopFloor());</span>
+<span class="nc" id="L279">        lift = new Lift(2);</span>
+<span class="nc" id="L280">        assertEquals(2, lift.getTopFloor());</span>
+<span class="nc" id="L281">    }</span>
+
+    @Test
+    public void test31() throws Throwable {
+<span class="nc" id="L285">        Lift lift = new Lift(1);</span>
+<span class="nc" id="L286">        assertEquals(0, lift.getCurrentFloor());</span>
+<span class="nc" id="L287">        lift = new Lift(1, 1);</span>
+<span class="nc" id="L288">        assertEquals(0, lift.getCurrentFloor());</span>
+<span class="nc" id="L289">    }</span>
+
+    @Test
+    public void test32() throws Throwable {
+<span class="nc" id="L293">        Lift lift = new Lift(3);</span>
+<span class="nc" id="L294">        lift.goUp();</span>
+<span class="nc" id="L295">        assertEquals(1, lift.getCurrentFloor());</span>
+<span class="nc" id="L296">        lift.goUp();</span>
+<span class="nc" id="L297">        lift.goUp();</span>
+<span class="nc" id="L298">        lift.goUp();</span>
+<span class="nc" id="L299">        assertEquals(3, lift.getCurrentFloor());</span>
+<span class="nc" id="L300">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

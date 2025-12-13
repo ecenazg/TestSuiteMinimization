@@ -1,0 +1,135 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > MinimizingFitnessFunction</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">de.uni_passau.fim.se2.sbse.suite_minimisation.fitness_functions</a>
+</div>
+
+<h1>Coverage Summary for Class: MinimizingFitnessFunction (de.uni_passau.fim.se2.sbse.suite_minimisation.fitness_functions)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MinimizingFitnessFunction</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package de.uni_passau.fim.se2.sbse.suite_minimisation.fitness_functions;
+&nbsp;
+&nbsp;import java.util.function.DoubleUnaryOperator;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents a minimizing fitness function, which awards lower values to better solutions.
+&nbsp; *
+&nbsp; * @param &lt;C&gt; the type of configuration rated by this function
+&nbsp; * @author Sebastian Schweikl
+&nbsp; */
+&nbsp;@FunctionalInterface
+&nbsp;public interface MinimizingFitnessFunction&lt;C&gt; extends FitnessFunction&lt;C&gt; {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Always returns {@code true} as this is a minimizing fitness function.
+&nbsp;     *
+&nbsp;     * @return always {@code true}
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    default boolean isMinimizing() {
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * {@inheritDoc}
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    default MinimizingFitnessFunction&lt;C&gt; andThenAsDouble(final DoubleUnaryOperator after) {
+<b class="nc">&nbsp;        return (MinimizingFitnessFunction&lt;C&gt;) FitnessFunction.super.andThenAsDouble(after);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-12-13 22:10</div>
+</div>
+</body>
+</html>

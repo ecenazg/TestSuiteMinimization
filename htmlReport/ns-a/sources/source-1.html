@@ -1,0 +1,400 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > AlgorithmBuilder</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">de.uni_passau.fim.se2.sbse.suite_minimisation.utils</a>
+</div>
+
+<h1>Coverage Summary for Class: AlgorithmBuilder (de.uni_passau.fim.se2.sbse.suite_minimisation.utils)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AlgorithmBuilder</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/38)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">AlgorithmBuilder$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/39)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package de.uni_passau.fim.se2.sbse.suite_minimisation.utils;
+&nbsp;
+&nbsp;import de.uni_passau.fim.se2.sbse.suite_minimisation.algorithms.GeneticAlgorithm;
+&nbsp;import de.uni_passau.fim.se2.sbse.suite_minimisation.algorithms.NSGA2;
+&nbsp;import de.uni_passau.fim.se2.sbse.suite_minimisation.algorithms.RandomSearch;
+&nbsp;import de.uni_passau.fim.se2.sbse.suite_minimisation.algorithms.SearchAlgorithmType;
+&nbsp;import de.uni_passau.fim.se2.sbse.suite_minimisation.chromosomes.Chromosome;
+&nbsp;import de.uni_passau.fim.se2.sbse.suite_minimisation.chromosomes.ChromosomeGenerator;
+&nbsp;import de.uni_passau.fim.se2.sbse.suite_minimisation.chromosomes.TestSuiteChromosome;
+&nbsp;import de.uni_passau.fim.se2.sbse.suite_minimisation.chromosomes.TestSuiteChromosomeGenerator;
+&nbsp;import de.uni_passau.fim.se2.sbse.suite_minimisation.crossover.SinglePointCrossover;
+&nbsp;import de.uni_passau.fim.se2.sbse.suite_minimisation.fitness_functions.*;
+&nbsp;import de.uni_passau.fim.se2.sbse.suite_minimisation.mutation.BitFlipMutation;
+&nbsp;import de.uni_passau.fim.se2.sbse.suite_minimisation.selection.BinaryTournamentSelection;
+&nbsp;import de.uni_passau.fim.se2.sbse.suite_minimisation.stopping_conditions.StoppingCondition;
+&nbsp;
+&nbsp;import java.util.Random;
+&nbsp;
+&nbsp;public class AlgorithmBuilder {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The default source randomness.
+&nbsp;     */
+&nbsp;    private final Random random;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The stopping condition to use.
+&nbsp;     */
+&nbsp;    private final StoppingCondition stoppingCondition;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The coverage matrix to use. Every row in the matrix represents a test case and every column
+&nbsp;     * represents a line in the CUT. An entry {@code matrix[i][j] == true} indicates that test case
+&nbsp;     * {@code i} covers line {@code j}. The matrix is rectangular.
+&nbsp;     */
+&nbsp;    private final boolean[][] coverageMatrix;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The number of test cases in the test suite (corresponds to the number of rows in the {@code
+&nbsp;     * coverageMatrix} and the length of the {@code testCaseNames} array).
+&nbsp;     */
+&nbsp;    private final int numberTestCases;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The number of lines in the system under test (corresponds to the number of columns in the
+&nbsp;     * {@code coverageMatrix}).
+&nbsp;     */
+&nbsp;    private final int numberLines;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * A normalizing fitness function measuring the size of test suite chromosomes.
+&nbsp;     */
+&nbsp;    private final MinimizingFitnessFunction&lt;? extends Chromosome&lt;?&gt;&gt; sizeFF;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * A normalizing fitness function measuring the coverage of test suite chromosomes.
+&nbsp;     */
+&nbsp;    private final MaximizingFitnessFunction&lt;? extends Chromosome&lt;?&gt;&gt; coverageFF;
+&nbsp;
+&nbsp;    public AlgorithmBuilder(final Random random,
+&nbsp;                            final StoppingCondition stoppingCondition,
+<b class="nc">&nbsp;                            final boolean[][] coverageMatrix) {</b>
+<b class="nc">&nbsp;        this.random = random;</b>
+<b class="nc">&nbsp;        this.stoppingCondition = stoppingCondition;</b>
+<b class="nc">&nbsp;        this.coverageMatrix = coverageMatrix;</b>
+<b class="nc">&nbsp;        this.numberLines = coverageMatrix[0].length;</b>
+<b class="nc">&nbsp;        this.numberTestCases = coverageMatrix.length;</b>
+<b class="nc">&nbsp;        this.sizeFF = makeTestSuiteSizeFitnessFunction();</b>
+<b class="nc">&nbsp;        this.coverageFF = makeTestSuiteCoverageFitnessFunction();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a new normalizing fitness function that measures the size of a given test suite chromosome.
+&nbsp;     *
+&nbsp;     * @return the test suite size fitness function
+&nbsp;     * @apiNote The return type uses a wildcard type &quot;{@code ?}&quot;. This is because your custom
+&nbsp;     * subclass of {@code Chromosome} has not existed yet at the time of writing this code, so I
+&nbsp;     * couldn&#39;t specify it.
+&nbsp;     * @implSpec When implementing this method, you can instantiate your custom subclasses such as
+&nbsp;     * {@code FitnessFunction} as usual. No need to use the wildcard type &quot;{@code ?}&quot; yourself. The
+&nbsp;     * fitness function shall be normalizing. The overall number of test cases can be retrieved from
+&nbsp;     * the `numberTestCases` field.
+&nbsp;     */
+&nbsp;    private MinimizingFitnessFunction&lt;? extends Chromosome&lt;?&gt;&gt; makeTestSuiteSizeFitnessFunction() {
+&nbsp;
+<b class="nc">&nbsp;        return (MinimizingFitnessFunction&lt;Chromosome&lt;?&gt;&gt;) chromosome -&gt; {</b>
+&nbsp;            // We know this is our concrete chromosome
+<b class="nc">&nbsp;            TestSuiteChromosome c = (TestSuiteChromosome) chromosome;</b>
+&nbsp;
+<b class="nc">&nbsp;            int selectedTests = c.getNumberOfSelectedTests();</b>
+&nbsp;
+&nbsp;            // Normalized to [0, 1]
+<b class="nc">&nbsp;            return (double) selectedTests / numberTestCases;</b>
+&nbsp;        };
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a new normalizing fitness function that measures the coverage of a given test suite chromosome.
+&nbsp;     *
+&nbsp;     * @return the test suite coverage fitness function
+&nbsp;     * @apiNote The return type uses a wildcard type &quot;{@code ?}&quot;. This is because your custom
+&nbsp;     * subclass of {@code Chromosome} has not existed yet at the time of writing this code, so I
+&nbsp;     * couldn&#39;t specify it.
+&nbsp;     * @implSpec When implementing this method, you can instantiate your custom subclasses such as
+&nbsp;     * {@code FitnessFunction} as usual. No need to use the wildcard type &quot;{@code ?}&quot; yourself. The
+&nbsp;     * fitness function shall be normalizing. The overall number of lines in the SUT
+&nbsp;     * (system-under-test) can be retrieved from the `numberLines` field.
+&nbsp;     */
+&nbsp;    private MaximizingFitnessFunction&lt;? extends Chromosome&lt;?&gt;&gt; makeTestSuiteCoverageFitnessFunction() {
+&nbsp;
+<b class="nc">&nbsp;        return (MaximizingFitnessFunction&lt;Chromosome&lt;?&gt;&gt;) chromosome -&gt; {</b>
+<b class="nc">&nbsp;            TestSuiteChromosome c = (TestSuiteChromosome) chromosome;</b>
+&nbsp;
+<b class="nc">&nbsp;            boolean[] covered = new boolean[numberLines];</b>
+&nbsp;
+<b class="nc">&nbsp;            for (int testIndex : c.getSelectedTestIndices()) {</b>
+<b class="nc">&nbsp;                for (int line = 0; line &lt; numberLines; line++) {</b>
+<b class="nc">&nbsp;                    covered[line] |= coverageMatrix[testIndex][line];</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            int coveredLines = 0;</b>
+<b class="nc">&nbsp;            for (boolean b : covered) {</b>
+<b class="nc">&nbsp;                if (b) coveredLines++;</b>
+&nbsp;            }
+&nbsp;
+&nbsp;            // Normalized to [0, 1]
+<b class="nc">&nbsp;            return (double) coveredLines / numberLines;</b>
+&nbsp;        };
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public MinimizingFitnessFunction&lt;? extends Chromosome&lt;?&gt;&gt; getSizeFF() {
+<b class="nc">&nbsp;        return sizeFF;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public MaximizingFitnessFunction&lt;? extends Chromosome&lt;?&gt;&gt; getCoverageFF() {
+<b class="nc">&nbsp;        return coverageFF;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Builds the specified search algorithm using the fields of this class.
+&nbsp;     *
+&nbsp;     * @param algorithm the algorithm to build
+&nbsp;     * @return the algorithm
+&nbsp;     * @apiNote The return type uses a wildcard type &quot;{@code ?}&quot;. This is because your custom
+&nbsp;     * subclass of {@code Chromosome} has not existed yet at the time of writing this code, so I
+&nbsp;     * couldn&#39;t specify it.
+&nbsp;     */
+&nbsp;    public GeneticAlgorithm&lt;? extends Chromosome&lt;?&gt;&gt; buildAlgorithm(final SearchAlgorithmType algorithm) {
+<b class="nc">&nbsp;        return switch (algorithm) {</b>
+<b class="nc">&nbsp;            case RANDOM_SEARCH -&gt; buildRandomSearch();</b>
+<b class="nc">&nbsp;            case NSGA_II -&gt; buildNSGA2();</b>
+&nbsp;        };
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns an instance of the NSGA-II search algorithm to find a solution for the test suite
+&nbsp;     * minimization problem. The algorithm is constructed using the fields of this class.
+&nbsp;     *
+&nbsp;     * @return the search algorithm
+&nbsp;     * @apiNote The return type uses a wildcard type &quot;{@code ?}&quot;. This is because your custom
+&nbsp;     * subclass of {@code Chromosome} has not existed yet at the time of writing this code, so I
+&nbsp;     * couldn&#39;t specify it.
+&nbsp;     * @implSpec When implementing this method, you can instantiate your custom subclasses such as
+&nbsp;     * {@code Mutation}, {@code Chromosome}, and {@code SearchAlgorithm} as usual. No need to use
+&nbsp;     * the wildcard type &quot;{@code ?}&quot; yourself. However, depending on the circumstances it might be
+&nbsp;     * necessary to add unchecked casts, e.g., when using the fitness function fields of this
+&nbsp;     * class.
+&nbsp;     */
+&nbsp;    @SuppressWarnings(&quot;unchecked&quot;)
+&nbsp;    private GeneticAlgorithm&lt;? extends Chromosome&lt;?&gt;&gt; buildNSGA2() {
+&nbsp;
+<b class="nc">&nbsp;        var mutation = new BitFlipMutation();</b>
+<b class="nc">&nbsp;        var crossover = new SinglePointCrossover();</b>
+&nbsp;
+<b class="nc">&nbsp;        ChromosomeGenerator&lt;TestSuiteChromosome&gt; generator =</b>
+&nbsp;                new TestSuiteChromosomeGenerator(numberTestCases, mutation, crossover);
+&nbsp;
+<b class="nc">&nbsp;        NSGA2 nsga2 = new NSGA2(</b>
+&nbsp;                stoppingCondition,
+&nbsp;                random,
+&nbsp;                50,
+&nbsp;                generator,
+&nbsp;                (FitnessFunction&lt;TestSuiteChromosome&gt;) sizeFF,
+&nbsp;                (FitnessFunction&lt;TestSuiteChromosome&gt;) coverageFF
+&nbsp;        );
+&nbsp;
+<b class="nc">&nbsp;        var selection = new BinaryTournamentSelection&lt;TestSuiteChromosome&gt;(</b>
+<b class="nc">&nbsp;                nsga2.nsga2Comparator(),</b>
+&nbsp;                random
+&nbsp;        );
+&nbsp;
+<b class="nc">&nbsp;        return new NSGA2(</b>
+&nbsp;                stoppingCondition,
+&nbsp;                random,
+&nbsp;                50,
+&nbsp;                generator,
+&nbsp;                (FitnessFunction&lt;TestSuiteChromosome&gt;) sizeFF,
+&nbsp;                (FitnessFunction&lt;TestSuiteChromosome&gt;) coverageFF
+&nbsp;        );
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns an instance of the Random Search algorithm to find a solution for the test suite
+&nbsp;     * minimization problem. The algorithm is constructed using the fields of this class.
+&nbsp;     * &lt;p&gt;
+&nbsp;     * Instead of sampling a number of test suites at random and simply returning the best one, we
+&nbsp;     * consider all sampled test suites and determine all non-dominated ones, according to the
+&nbsp;     * objectives of line coverage and test suite size. This non-dominated set of solutions
+&nbsp;     * represents the first Pareto-front.
+&nbsp;     * &lt;p&gt;
+&nbsp;     * Note: The more samples to take, the longer it takes for Random Search to run. At some
+&nbsp;     * point, random search will run considerably longer than NSGA-II because the run time is
+&nbsp;     * dominated by fast non-dominated sort, which runs in O(samples * samples).
+&nbsp;     *
+&nbsp;     * @return the search algorithm
+&nbsp;     * @apiNote The return type uses a wildcard type &quot;{@code ?}&quot;. This is because your custom
+&nbsp;     * subclass of {@code Chromosome} has not existed yet at the time of writing this code, so I
+&nbsp;     * couldn&#39;t specify it.
+&nbsp;     * @implSpec When implementing this method, you can instantiate your custom subclasses such as
+&nbsp;     * {@code Mutation}, {@code Chromosome}, and {@code SearchAlgorithm} as usual. No need to use
+&nbsp;     * the wildcard type &quot;{@code ?}&quot; yourself. However, depending on the circumstances it might be
+&nbsp;     * necessary to add unchecked casts, e.g., when using the fitness function fields of this
+&nbsp;     * class.
+&nbsp;     */
+&nbsp;    @SuppressWarnings(&quot;unchecked&quot;)
+&nbsp;    private GeneticAlgorithm&lt;? extends Chromosome&lt;?&gt;&gt; buildRandomSearch() {
+&nbsp;
+<b class="nc">&nbsp;        var mutation = new BitFlipMutation();</b>
+<b class="nc">&nbsp;        var crossover = new SinglePointCrossover();</b>
+&nbsp;
+<b class="nc">&nbsp;        ChromosomeGenerator&lt;TestSuiteChromosome&gt; generator =</b>
+&nbsp;                new TestSuiteChromosomeGenerator(numberTestCases, mutation, crossover);
+&nbsp;
+<b class="nc">&nbsp;        return new RandomSearch(</b>
+&nbsp;                stoppingCondition,
+&nbsp;                generator,
+&nbsp;                (FitnessFunction&lt;TestSuiteChromosome&gt;) sizeFF,
+&nbsp;                (FitnessFunction&lt;TestSuiteChromosome&gt;) coverageFF,
+&nbsp;                coverageMatrix,
+&nbsp;                numberTestCases,
+&nbsp;                numberLines
+&nbsp;        );
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-12-13 22:10</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FitnessFunction.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Test-Suite-Minimisation</a> &gt; <a href="index.source.html" class="el_package">de.uni_passau.fim.se2.sbse.suite_minimisation.fitness_functions</a> &gt; <span class="el_source">FitnessFunction.java</span></div><h1>FitnessFunction.java</h1><pre class="source lang-java linenums">package de.uni_passau.fim.se2.sbse.suite_minimisation.fitness_functions;
+
+import java.util.Comparator;
+import java.util.Objects;
+import java.util.function.BinaryOperator;
+import java.util.function.DoubleUnaryOperator;
+import java.util.function.Function;
+import java.util.function.ToDoubleFunction;
+
+/**
+ * A fitness function maps a given solution to a numeric value that tells the goodness of the
+ * solution. Minimizing fitness functions characterize better solutions by assigning lower values to
+ * them, whereas maximizing fitness functions assign higher values.
+ *
+ * @param &lt;C&gt; the type of solution rated by this fitness function
+ * @author Sebastian Schweikl
+ */
+public interface FitnessFunction&lt;C&gt; extends ToDoubleFunction&lt;C&gt; {
+
+    /**
+     * &lt;p&gt;
+     * Computes and returns the fitness value of the given solution {@code c}. Minimizing fitness
+     * functions must return lower values for better solutions, whereas maximizing fitness functions
+     * are expected to return higher values. Implementations must ensure that the returned value is
+     * always non-negative and never {@code NaN}.
+     * &lt;/p&gt;
+     * &lt;p&gt;
+     * When two solutions {@code c1} and {@code c2} are equal it is generally recommended to return
+     * the same fitness value for both of them. That is, {@code c1.equals(c2)} implies {@code
+     * getFitness(c1) == getFitness(c2)}. While this is not an absolute requirement implementations
+     * that do not conform to this should clearly indicate this fact.
+     * &lt;/p&gt;
+     *
+     * @param c the solution to rate
+     * @return the fitness value of the given solutions
+     * @throws NullPointerException if {@code null} is given
+     */
+    @Override
+    double applyAsDouble(final C c) throws NullPointerException;
+
+    /**
+     * Returns a composed fitness function that first applies this function to its input, and then
+     * applies the {@code after} function to the result. If evaluation of either function throws an
+     * exception, it is relayed to the caller of the composed function.
+     *
+     * @param after the function to apply after this function is applied
+     * @return a composed function that first applies this function and then applies the {@code
+     * after} function
+     * @throws NullPointerException if after is null
+     */
+    default FitnessFunction&lt;C&gt; andThenAsDouble(final DoubleUnaryOperator after) {
+<span class="fc" id="L52">        Objects.requireNonNull(after);</span>
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        return isMinimizing()</span>
+<span class="fc" id="L54">                ? (MinimizingFitnessFunction&lt;C&gt;) c -&gt; after.applyAsDouble(this.applyAsDouble(c))</span>
+<span class="nc" id="L55">                : (MaximizingFitnessFunction&lt;C&gt;) c -&gt; after.applyAsDouble(this.applyAsDouble(c));</span>
+    }
+
+    /**
+     * Tells whether this function is a minimizing fitness function. The opposite of {@link
+     * #isMaximizing()}.
+     *
+     * @return {@code true} if this is a minimizing fitness function, {@code false} if this is a
+     * maximizing fitness function
+     */
+    boolean isMinimizing();
+
+    /**
+     * Tells whether this function is a maximizing fitness function. The opposite of {@link
+     * #isMinimizing()}.
+     *
+     * @return {@code true} if this is a maximizing fitness function, {@code false} if this is a
+     * minimizing fitness function
+     */
+    default boolean isMaximizing() {
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        return !isMinimizing();</span>
+    }
+
+    /**
+     * Returns a comparator that compares two solutions by their fitness, taking into account
+     * whether this is a maximizing or a minimizing fitness function. In other words, given two
+     * solutions {@code c1} and {@code c2} with fitness values {@code f1} and {@code f2},
+     * respectively, the comparator will return a positive integer if {@code f1} is better than
+     * {@code f2}, zero ({@code 0}) if the two fitness values are equal, and a negative integer if
+     * {@code f1} is worse than {@code f2}. If this is a minimizing fitness function, smaller
+     * fitness values are considered better, and, on the contrary, if this is a maximizing fitness
+     * function, larger fitness values are considered better.
+     * &lt;p&gt;
+     * Example usage:
+     * &lt;pre&gt;{@code
+     * FitnessFunction&lt;C&gt; ff = ...;
+     * C c1 = ...; // first solution to compare
+     * C c2 = ...; // second solution to compare
+     *
+     * int flag = ff.comparator().compare(c1, c2);
+     * if (flag &gt; 0) {
+     *     // c1 is better than c2
+     * } else if (flag &lt; 0) {
+     *     // c2 is better than c1
+     * } else {
+     *     // c1 and c2 are equally good
+     * }
+     * }&lt;/pre&gt;
+     *
+     * @return a comparator that uses this fitness function as extractor for its sort key
+     * @implNote The default implementation creates a comparator via {@code
+     * Comparator.comparingDouble(this)}. When no caching is implemented in subclasses, this entails
+     * &lt;em&gt;two&lt;/em&gt; fitness evaluations.
+     */
+    default Comparator&lt;C&gt; comparator() {
+<span class="fc" id="L110">        final Comparator&lt;C&gt; comparator = Comparator.comparingDouble(this);</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        return isMinimizing() ? comparator.reversed() : comparator;</span>
+    }
+
+    /**
+     * Returns a binary operator that determines the better of two given solutions based on their
+     * fitness, taking into account whether this is a minimizing or maximizing fitness function.
+     * When both solutions are equally good, the binary operator returns the first argument.
+     * &lt;p&gt;
+     * Example usage:
+     * &lt;pre&gt;{@code
+     * FitnessFunction&lt;C&gt; ff = ...;
+     * C c1 = ...;
+     * C c2 = ...;
+     * C best = ff.best().apply(c1, c2);
+     * }
+     * &lt;/pre&gt;
+     *
+     * @return a binary operator to determine the better of two given solutions
+     * @implNote The default implementation uses this fitness function's {@code comparator()} to
+     * determine which solution is better. When no caching is implemented in subclasses, this
+     * entails &lt;em&gt;two&lt;/em&gt; fitness evaluations.
+     */
+    default BinaryOperator&lt;C&gt; best() {
+<span class="fc bfc" id="L134" title="All 2 branches covered.">        return isMinimizing()</span>
+<span class="fc" id="L135">                ? BinaryOperator.minBy(comparator())</span>
+<span class="fc" id="L136">                : BinaryOperator.maxBy(comparator());</span>
+    }
+
+    /**
+     * Converts this fitness function into a {@code Function&lt;C, Double&gt;}, i.e., instead of returning
+     * a primitive {@code double} it will return a boxed {@code Double}. Note: the {@code Function}
+     * interface defines {@code apply} instead of {@code applyAsDouble}.
+     *
+     * @return variant of this fitness function returning a boxed {@code Double} instead of a
+     * primitive {@code double}
+     * @apiNote This is sometimes useful when working with APIs that only work with {@code Object}s
+     * but not primitive types, e.g., {@code Collectors.groupingBy} and others.
+     */
+    default Function&lt;C, Double&gt; boxed() {
+<span class="nc" id="L150">        return this::applyAsDouble;</span>
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
